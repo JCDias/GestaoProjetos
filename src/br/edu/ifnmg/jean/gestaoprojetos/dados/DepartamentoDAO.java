@@ -5,7 +5,7 @@
  */
 package br.edu.ifnmg.jean.gestaoprojetos.dados;
 
-import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,39 +15,30 @@ import java.sql.SQLException;
  *
  * @author JEAN CARLOS
  */
-public class LoginDAO {
+public class DepartamentoDAO {
     
-    private static final String SQL_SELECT_LOGIN = "SELECT NOME, CARGO, SENHA, EMAIL, ID_DEPARTAMENTO FROM USUARIO WHERE EMAIL LIKE ? AND SENHA LIKE ?";
-
-    //Selecionar usuario
-    public Usuario selecionarLogin(String login, String Senha) throws SQLException {
+    private static final String SQL_SELECT_DEPARTAMENTO_POR_COD = "SELECT CODIGO, NOME FROM DEPARTAMENTOS WHERE DEPARTAMENTOS.ID_DEPARTAMENTO = ?";
+    
+    public Departamento selecionarDepartamentoPorCodigo(String COD_DEPARTAMENTO) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
-        Usuario user = null;
+        Departamento DEP = null;
 
         try {
 
             conexao = BancoDadosUtil.getConnection();
 
-            comando = conexao.prepareStatement(SQL_SELECT_LOGIN);
-            comando.setString(1, login);
-            comando.setString(2, Senha);
+            comando = conexao.prepareStatement(SQL_SELECT_DEPARTAMENTO_POR_COD);
+            comando.setString(1, COD_DEPARTAMENTO);
 
             resultado = comando.executeQuery();
 
             if (resultado.next()) {
-                user = new Usuario();
+                DEP = new Departamento();
 
-                user.setNome(resultado.getString("NOME"));
-                user.setCargo(resultado.getString("CARGO"));
-                user.setSenha(resultado.getString("SENHA"));
-                user.setEmail(resultado.getString("EMAIL"));
-            
-
-                
-                DepartamentoDAO depDAO = new DepartamentoDAO();
-                user.setDepartamento(depDAO.selecionarDepartamentoPorCodigo(resultado.getString("ID_DEPARTAMENTO")));
+                DEP.setNome(resultado.getString("NOME"));
+                DEP.setCodigo(resultado.getString("CODIGO"));
 
             }
 
@@ -67,7 +58,6 @@ public class LoginDAO {
                 conexao.close();
             }
         }
-        return user;
-
+        return DEP;
     }
 }
