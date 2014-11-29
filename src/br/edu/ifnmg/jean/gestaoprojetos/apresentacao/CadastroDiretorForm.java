@@ -8,24 +8,33 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.Criptografia;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DiretorBO;
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.apache.log4j.Appender;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 /**
  *
  * @author PC
  */
 public class CadastroDiretorForm extends javax.swing.JFrame {
-
+    static Logger logger = Logger.getLogger(CadastroDiretorForm.class);
+    
     /**
      * Creates new form CadastroDiretorForm
      */
-    public CadastroDiretorForm() {
+    public CadastroDiretorForm() throws IOException {
         initComponents();
         this.setLocationRelativeTo(null);
         JOptionPane.showMessageDialog(null, "Seja bem vindo ao SGP! \nÉ necessário cadastrar um diretor \nao executar o SGP pela vez.", "Boas Vindas", JOptionPane.INFORMATION_MESSAGE);
+        //Configuração do LOG4J
+        BasicConfigurator.configure();
+        Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
+        logger.addAppender(fileAppender);
     }
 
     /**
@@ -246,12 +255,15 @@ public class CadastroDiretorForm extends javax.swing.JFrame {
             
             try {
                 diretorBO.criarDiretor(diretor);
+                logger.info("Diretor cadastrado com sucesso!");
                 JOptionPane.showMessageDialog(null, "Diretor cadastrado com sucesso!", "Cadastro de Diretor", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
                 new LoginForm().setVisible(true);
             } catch (SQLException ex) {
-                Logger.getLogger(CadastroDiretorForm.class.getName()).log(Level.SEVERE, null, ex);
-                // COlocar log4j2 aki
+                logger.error("Erro ao cadastrar diretor "+ex.getMessage());
+                // COlocar log4j2 aki ERROR
+            } catch (IOException ex) {
+                
             }
         }else{
             JOptionPane.showMessageDialog(null, valida, "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);

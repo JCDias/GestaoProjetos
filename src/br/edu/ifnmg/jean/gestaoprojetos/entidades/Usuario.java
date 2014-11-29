@@ -10,6 +10,7 @@ package br.edu.ifnmg.jean.gestaoprojetos.entidades;
  * @author JEAN CARLOS
  */
 public class Usuario {
+    private int id_usuario;
     private String nome;
     private String email;
     private String senha;
@@ -54,6 +55,14 @@ public class Usuario {
 
     public void setDepartamento(Departamento departamento) {
         this.departamento = departamento;
+    }
+
+    public int getId_usuario() {
+        return id_usuario;
+    }
+
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
     }
     
 }

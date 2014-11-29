@@ -5,27 +5,37 @@
  */
 package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
+import static br.edu.ifnmg.jean.gestaoprojetos.apresentacao.CadastroDiretorForm.logger;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.Criptografia;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DiretorBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.LoginBO;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.apache.log4j.Appender;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 /**
  *
  * @author JEAN CARLOS
  */
 public class LoginForm extends javax.swing.JFrame {
-
+static Logger logger = Logger.getLogger(LoginForm.class);
     /**
      * Creates new form LoginForm
      */
-    public LoginForm() {
+    public LoginForm() throws IOException {
         initComponents();
         this.setLocationRelativeTo(null);
+        //Configuração do LOG4J
+        BasicConfigurator.configure();
+        Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
+        logger.addAppender(fileAppender);
     }
 
     @SuppressWarnings("unchecked")
@@ -173,13 +183,12 @@ public class LoginForm extends javax.swing.JFrame {
             try {
                 usuarioLogado = loginBO.Logar(email, senhaCriptografada);
                 if(usuarioLogado != null){
-                    System.out.println("Logou");
+                    // chamar tela principal aki
                 }else{
                     JOptionPane.showMessageDialog(null, "Email ou senha inválidos!", "ERRO", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (SQLException ex) {
-                //Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
-                //colocar meu log aki
+                logger.error("Erro ao validar login "+ex.getMessage());
             }
             
         }else{
@@ -198,13 +207,21 @@ public class LoginForm extends javax.swing.JFrame {
         if(user==null){
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadastroDiretorForm().setVisible(true);
+                try {
+                    new CadastroDiretorForm().setVisible(true);
+                } catch (IOException ex) {
+                    
+                }
             }
         });
         }else{
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoginForm().setVisible(true);
+                try {
+                    new LoginForm().setVisible(true);
+                } catch (IOException ex) {
+                    
+                }
             }
         });
         }
