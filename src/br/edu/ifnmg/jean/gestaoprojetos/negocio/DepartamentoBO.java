@@ -7,6 +7,7 @@ package br.edu.ifnmg.jean.gestaoprojetos.negocio;
 
 import br.edu.ifnmg.jean.gestaoprojetos.dados.DepartamentoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -43,5 +44,12 @@ public class DepartamentoBO {
         
         DepartamentoDAO departamentoDAO = new DepartamentoDAO();
         departamentoDAO.criarDepartamento(departamento);
+    }
+    
+    public ResultSet preencherTabela() throws SQLException {
+        DepartamentoDAO departamentoDAO = new DepartamentoDAO();
+        ResultSet resultadoPreencheTabela = departamentoDAO.PreencheTabelaDepartamentos();
+
+        return resultadoPreencheTabela;
     }
 }

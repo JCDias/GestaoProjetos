@@ -16,11 +16,10 @@ import java.sql.SQLException;
  * @author JEAN CARLOS
  */
 public class DepartamentoDAO {
-    
-    private static final String SQL_INSERT_DEPARTAMENTO = "INSERT INTO DEPARTAMENTOS(NOME, CODIGO)VALUES (?,?)";
+
+   
     private static final String SQL_SELECT_DEPARTAMENTO_POR_COD = "SELECT CODIGO, NOME FROM DEPARTAMENTOS WHERE DEPARTAMENTOS.ID_DEPARTAMENTO = ?";
-    private static final String SQL_SELECT_DEPARTAMENTO = "SELECT NOME, CODIGO FROM DEPARTAMENTOS WHERE NOME = ? OR CODIGO = ?";
-    
+
     public Departamento selecionarDepartamentoPorCodigo(String COD_DEPARTAMENTO) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
@@ -62,7 +61,8 @@ public class DepartamentoDAO {
         }
         return DEP;
     }
-    
+    private static final String SQL_SELECT_DEPARTAMENTO = "SELECT NOME, CODIGO FROM DEPARTAMENTOS WHERE NOME = ? OR CODIGO = ?";
+
     //Verifica se já existe um departamento com o nome ou código digitado
     public Departamento selecDepartamento(String NOME, String CODIGO) throws SQLException {
         Connection conexao = null;
@@ -107,6 +107,8 @@ public class DepartamentoDAO {
         return DEP;
     }
     
+    private static final String SQL_INSERT_DEPARTAMENTO = "INSERT INTO DEPARTAMENTOS(NOME, CODIGO)VALUES (?,?)";
+    
     //Inserir um novo departamento
     public void criarDepartamento(Departamento Dep) throws SQLException {
         Connection conexao = null;
@@ -138,5 +140,40 @@ public class DepartamentoDAO {
         }
     }
     
+     private static final String SQL_SELECT_TODOS_DEPARTAMENTOS = "SELECT CODIGO as Código, NOME as Departamento FROM DEPARTAMENTOS";
     
+    //Preencher tabela 
+    public ResultSet PreencheTabelaDepartamentos() throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        Departamento DEP = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_TODOS_DEPARTAMENTOS);
+
+            resultado = comando.executeQuery();
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+            throw new RuntimeException(e);
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return resultado;
+    }
+
 }
