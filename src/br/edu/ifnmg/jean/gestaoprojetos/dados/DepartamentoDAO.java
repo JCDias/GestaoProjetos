@@ -17,7 +17,6 @@ import java.sql.SQLException;
  */
 public class DepartamentoDAO {
 
-   
     private static final String SQL_SELECT_DEPARTAMENTO_POR_COD = "SELECT CODIGO, NOME FROM DEPARTAMENTOS WHERE DEPARTAMENTOS.ID_DEPARTAMENTO = ?";
 
     public Departamento selecionarDepartamentoPorCodigo(String COD_DEPARTAMENTO) throws SQLException {
@@ -106,9 +105,9 @@ public class DepartamentoDAO {
         }
         return DEP;
     }
-    
+
     private static final String SQL_INSERT_DEPARTAMENTO = "INSERT INTO DEPARTAMENTOS(NOME, CODIGO)VALUES (?,?)";
-    
+
     //Inserir um novo departamento
     public void criarDepartamento(Departamento Dep) throws SQLException {
         Connection conexao = null;
@@ -139,9 +138,9 @@ public class DepartamentoDAO {
             }
         }
     }
-    
-     private static final String SQL_SELECT_TODOS_DEPARTAMENTOS = "SELECT CODIGO as Código, NOME as Departamento FROM DEPARTAMENTOS";
-    
+
+    private static final String SQL_SELECT_TODOS_DEPARTAMENTOS = "SELECT CODIGO as Código, NOME as Departamento FROM DEPARTAMENTOS";
+
     //Preencher tabela 
     public ResultSet PreencheTabelaDepartamentos() throws SQLException {
         Connection conexao = null;
@@ -176,4 +175,68 @@ public class DepartamentoDAO {
         return resultado;
     }
 
+    //Atualizar departamentos
+    private static final String SQL_UPDATE_DEPARTAMENTO = "UPDATE DEPARTAMENTOS SET CODIGO =  ?, NOME  = ? WHERE  CODIGO = ?";
+
+    public void atualizarDepartamento(Departamento departamento, String codigo) throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_UPDATE_DEPARTAMENTO);
+
+            comando.setString(1, departamento.getCodigo());
+            comando.setString(2, departamento.getNome());
+            comando.setString(3, codigo);
+
+            comando.executeUpdate();
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+    }
+
+    //Deletar usuário
+    private static final String SQL_DELETE_DEPARTAMENTO = "DELETE FROM DEPARTAMENTOS WHERE  CODIGO = ?";
+
+    public void excluirDepartamento(String Cod_Departamento) throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_DELETE_DEPARTAMENTO);
+
+            comando.setString(1, Cod_Departamento);
+
+            comando.execute();
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+
+            }
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+    }
 }

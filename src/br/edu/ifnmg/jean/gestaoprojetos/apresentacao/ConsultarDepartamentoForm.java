@@ -31,7 +31,6 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
      */
     public ConsultarDepartamentoForm() throws IOException {
         initComponents();
-        this.jPanelEditar.setVisible(false);
         this.preencherTabela();
         this.setLocationRelativeTo(null);
         //Configuração do LOG4J
@@ -41,6 +40,7 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
     }
 
     public void preencherTabela() {
+        this.jPanelEditar.setVisible(false);
         DepartamentoDAO departamento = new DepartamentoDAO();
 
         try {
@@ -51,28 +51,11 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
 
     }
 
-    //pegar valor selecionado na tabela
-    public void selecionaTabela() {
-        int seleciona = tblDepartamentos.getSelectedRow();
-        System.out.println(seleciona);
-        if (seleciona > 0) {
-            this.jPanelEditar.setVisible(true);
-            String codigo = tblDepartamentos.getModel().getValueAt(seleciona, 0).toString();
-            String nome = tblDepartamentos.getModel().getValueAt(seleciona, 1).toString();
-            txtCodigo.setText(codigo);
-            txtNome.setText(nome);
-        } else {
-            JOptionPane.showMessageDialog(null, "Selecione uma linha antes de editar!", "Consultar Departamento", JOptionPane.INFORMATION_MESSAGE);
-        }
-       
-    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        btnCadastrar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -83,18 +66,14 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         txtNome = new javax.swing.JTextField();
         btnSalvar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
 
         setTitle("Consultar Departamentos");
+        setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Departamentos", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 18))); // NOI18N
 
-        btnCadastrar.setText("Cadastrar");
-        btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCadastrarActionPerformed(evt);
-            }
-        });
-
+        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/kedit.png"))); // NOI18N
         btnEditar.setText("Editar");
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -102,7 +81,13 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
             }
         });
 
+        btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/button_cancel.png"))); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         tblDepartamentos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -123,10 +108,19 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
 
         jLabel1.setText("Nome Departamento: ");
 
+        btnSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/kfloppy.png"))); // NOI18N
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalvarActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/editdelete.png"))); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
             }
         });
 
@@ -145,7 +139,10 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtNome))
                     .addGroup(jPanelEditarLayout.createSequentialGroup()
+                        .addGap(127, 127, 127)
                         .addComponent(btnSalvar)
+                        .addGap(36, 36, 36)
+                        .addComponent(btnCancelar)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -160,8 +157,10 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
                 .addGroup(jPanelEditarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(btnSalvar))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelEditarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSalvar)
+                    .addComponent(btnCancelar)))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -169,26 +168,22 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(btnCadastrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(48, 48, 48)
-                .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(65, 65, 65)
-                .addComponent(btnExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(36, 36, 36))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnEditar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
             .addComponent(jPanelEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnCadastrar, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                    .addComponent(btnExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -207,55 +202,67 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        CadastroDepartamentoForm cadDep;
-        try {
-            cadDep = new CadastroDepartamentoForm();
-            cadDep.setVisible(true);
-        } catch (IOException ex) {
-
-        }
-
-    }//GEN-LAST:event_btnCadastrarActionPerformed
-
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        this.selecionaTabela();
-
+        int seleciona = tblDepartamentos.getSelectedRow();
+        if (seleciona > 0) {
+            this.jPanelEditar.setVisible(true);
+            String codigo = tblDepartamentos.getModel().getValueAt(seleciona, 0).toString();
+            String nome = tblDepartamentos.getModel().getValueAt(seleciona, 1).toString();
+            txtCodigo.setText(codigo);
+            txtCodigo.setEnabled(false);
+            txtNome.setText(nome);
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione uma linha antes de editar!", "Consultar Departamento", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        Departamento departamentoexistente = new Departamento();
-
-        //Recebendo dados da tela
         String codigo = txtCodigo.getText().toUpperCase().trim();
-        String nomeDepartamento = txtNome.getText().trim();
-        System.out.println(codigo);
-        //Validar campos
-        DepartamentoBO departamentoBO = new DepartamentoBO();
-        String valida = departamentoBO.validaDados(codigo, nomeDepartamento);
+        String nome = txtNome.getText().trim();
 
-        //Departamento
         Departamento departamento = new Departamento();
         departamento.setCodigo(codigo);
-        departamento.setNome(nomeDepartamento);
+        departamento.setNome(nome);
 
-        if (valida == null) {
-            try {
-                departamentoexistente = departamentoBO.VerificarDepartamento(departamento);
-                if (departamentoexistente == null) {
-                    departamentoBO.cadastrarDepartamento(departamento);
-                    JOptionPane.showMessageDialog(null, "Departamento " + departamento.getNome() + " cadastrado com sucesso!", "Cadastro departamento", JOptionPane.INFORMATION_MESSAGE);
-                    logger.info("Departamento" + nomeDepartamento + " alterado com sucesso");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Já exise um departamento cadastrado com esse nome ou código!", "ERRO", JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (SQLException ex) {
-                logger.error("Erro cadastrar departamento " + ex.getMessage());
-            }
+        if (nome.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Digite um nome para o departamento!", "Consultar Departamento", JOptionPane.ERROR_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(null, valida, "ERRO", JOptionPane.ERROR_MESSAGE);
+            DepartamentoBO departamentoBO = new DepartamentoBO();
+            try {
+                String mensagem = departamentoBO.atualizarDpto(departamento);
+                JOptionPane.showMessageDialog(null, mensagem, "Consultar Departamento", JOptionPane.INFORMATION_MESSAGE);
+                this.preencherTabela();
+            } catch (SQLException ex) {
+                logger.error("Erro ao atualizar departamento " + ex.getMessage());
+            }
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.preencherTabela();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        int seleciona = tblDepartamentos.getSelectedRow();
+        if (seleciona > 0) {
+            String codigo = tblDepartamentos.getModel().getValueAt(seleciona, 0).toString();
+            String nome = tblDepartamentos.getModel().getValueAt(seleciona, 1).toString();
+            int resp = JOptionPane.showConfirmDialog(this, "Deseja Realmente excluir este departamento?", "Excluir", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (resp == 0) {
+                DepartamentoBO departamentoBO = new DepartamentoBO();
+                try {
+                    departamentoBO.excluirDepartamento(codigo);
+                    JOptionPane.showMessageDialog(null, "Departamento excluido com sucesso!", "Consultar Departamento", JOptionPane.INFORMATION_MESSAGE);
+                    logger.info("Departamento "+nome+" excluido com sucesso!");
+                    this.preencherTabela();
+                } catch (SQLException ex) {
+                    logger.error("Erro ao excluir departamento " + ex.getMessage());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione uma linha para excluir!", "Consultar Departamento", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -297,7 +304,7 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCadastrar;
+    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnSalvar;

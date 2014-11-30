@@ -63,9 +63,9 @@
                       <Component id="jPanel3" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btnCadastrar" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
-                          <Component id="btnLimpar" min="-2" pref="82" max="-2" attributes="0"/>
-                          <EmptySpace pref="43" max="32767" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="btnLimpar" min="-2" pref="117" max="-2" attributes="0"/>
+                          <EmptySpace pref="16" max="32767" attributes="0"/>
                           <Component id="btnCancelar" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -84,10 +84,10 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btnCancelar" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
-                          <Component id="btnLimpar" min="-2" pref="34" max="-2" attributes="0"/>
+                          <Component id="btnCadastrar" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="btnCadastrar" max="32767" attributes="0"/>
+                      <Component id="btnLimpar" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -170,6 +170,9 @@
         </Container>
         <Component class="javax.swing.JButton" name="btnCadastrar">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/kfloppy.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Cadastrar"/>
           </Properties>
           <Events>
@@ -178,6 +181,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnLimpar">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/stop.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Limpar"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[81, 23]"/>
@@ -192,6 +198,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnCancelar">
           <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/editdelete.png"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Cancelar"/>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[81, 23]"/>

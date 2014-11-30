@@ -94,6 +94,7 @@ static Logger logger = Logger.getLogger(LoginForm.class);
                 .addContainerGap())
         );
 
+        btnEntrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/apply.png"))); // NOI18N
         btnEntrar.setText("Entrar");
         btnEntrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -101,6 +102,7 @@ static Logger logger = Logger.getLogger(LoginForm.class);
             }
         });
 
+        btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/editdelete.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,10 +122,10 @@ static Logger logger = Logger.getLogger(LoginForm.class);
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(btnEntrar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addComponent(btnEntrar)
+                .addGap(18, 18, 18)
                 .addComponent(btnCancelar)
-                .addGap(31, 31, 31))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,7 +138,7 @@ static Logger logger = Logger.getLogger(LoginForm.class);
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEntrar)
                     .addComponent(btnCancelar))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -183,7 +185,9 @@ static Logger logger = Logger.getLogger(LoginForm.class);
             try {
                 usuarioLogado = loginBO.Logar(email, senhaCriptografada);
                 if(usuarioLogado != null){
-                    // chamar tela principal aki
+                    TelaPrincipalForm tp = new TelaPrincipalForm(usuarioLogado);
+                    tp.setVisible(true);
+                    this.dispose();
                 }else{
                     JOptionPane.showMessageDialog(null, "Email ou senha inválidos!", "ERRO", JOptionPane.ERROR_MESSAGE);
                 }

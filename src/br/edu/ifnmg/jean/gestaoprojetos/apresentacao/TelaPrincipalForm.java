@@ -5,17 +5,31 @@
  */
 package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
+import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.Timer;
+
 /**
  *
  * @author PC
  */
 public class TelaPrincipalForm extends javax.swing.JFrame {
 
+    Usuario usuarioLogado = new Usuario();
+
     /**
      * Creates new form TelaPrincipalForm
      */
-    public TelaPrincipalForm() {
+    public TelaPrincipalForm(Usuario usuarioLogado) {
         initComponents();
+        this.usuarioLogado = usuarioLogado;
+        this.dataHora();
     }
 
     /**
@@ -27,57 +41,234 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        hora = new javax.swing.JLabel();
+        data = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        txtUsuario = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        mnuCadDepartamento = new javax.swing.JMenuItem();
+        mnuCadGerente = new javax.swing.JMenuItem();
+        mnuCadEncarregado = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        mnuConsDepartamento = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        mnuEditarPerfil = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Tela Principal");
+        setExtendedState(6);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/calendar-icon-black.png"))); // NOI18N
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/cronometro--quarto-de-hora--logistica_318-36128.png"))); // NOI18N
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/kuser.png"))); // NOI18N
+        jLabel3.setText("Usuário: ");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 234, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hora, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(hora, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel3)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+
+        jMenuBar1.setAlignmentY(0.0F);
+        jMenuBar1.setBorderPainted(false);
+        jMenuBar1.setMaximumSize(new java.awt.Dimension(629, 32769));
+        jMenuBar1.setMinimumSize(new java.awt.Dimension(0, 2));
+        jMenuBar1.setName(""); // NOI18N
+        jMenuBar1.setPreferredSize(new java.awt.Dimension(271, 40));
+
+        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/easymoblog.png"))); // NOI18N
+        jMenu1.setText("Cadastrar    ");
+        jMenu1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        mnuCadDepartamento.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.ALT_MASK));
+        mnuCadDepartamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/folder_blue.png"))); // NOI18N
+        mnuCadDepartamento.setText("Departamento");
+        mnuCadDepartamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCadDepartamentoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mnuCadDepartamento);
+
+        mnuCadGerente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.ALT_MASK));
+        mnuCadGerente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/kuser.png"))); // NOI18N
+        mnuCadGerente.setText("Gerente");
+        mnuCadGerente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCadGerenteActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mnuCadGerente);
+
+        mnuCadEncarregado.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.event.InputEvent.ALT_MASK));
+        mnuCadEncarregado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/Login Manager.png"))); // NOI18N
+        mnuCadEncarregado.setText("Encarregado");
+        jMenu1.add(mnuCadEncarregado);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/kfilereplace.png"))); // NOI18N
+        jMenu2.setText("Consultar     ");
+
+        mnuConsDepartamento.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.CTRL_MASK));
+        mnuConsDepartamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/folder_blue.png"))); // NOI18N
+        mnuConsDepartamento.setText("Departamentos");
+        mnuConsDepartamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuConsDepartamentoActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mnuConsDepartamento);
+
+        jMenuBar1.add(jMenu2);
+
+        jMenu4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/Volume Manager.png"))); // NOI18N
+        jMenu4.setText("Relatórios    ");
+        jMenuBar1.add(jMenu4);
+
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/configure.png"))); // NOI18N
+        jMenu3.setText("Opções     ");
+
+        mnuEditarPerfil.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F11, 0));
+        mnuEditarPerfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/aim.png"))); // NOI18N
+        mnuEditarPerfil.setText("Editar perfil");
+        jMenu3.add(mnuEditarPerfil);
+
+        jMenuBar1.add(jMenu3);
+
+        jMenu5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/shutdown.png"))); // NOI18N
+        jMenu5.setText("Sair");
+        jMenu5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu5MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu5);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 331, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaPrincipalForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void mnuCadGerenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadGerenteActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TelaPrincipalForm().setVisible(true);
-            }
-        });
+    }//GEN-LAST:event_mnuCadGerenteActionPerformed
+
+    private void mnuCadDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadDepartamentoActionPerformed
+        try {
+            CadastroDepartamentoForm consDep = new CadastroDepartamentoForm();
+            consDep.setVisible(true);
+        } catch (IOException es) {
+
+        }
+    }//GEN-LAST:event_mnuCadDepartamentoActionPerformed
+
+    private void jMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu5MouseClicked
+        int resp = JOptionPane.showConfirmDialog(this, "Deseja realmente sair?", "Sair", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (resp == 0) {
+            System.exit(0);
+        }
+    }//GEN-LAST:event_jMenu5MouseClicked
+
+    private void mnuConsDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuConsDepartamentoActionPerformed
+        try {
+            ConsultarDepartamentoForm consDep = new ConsultarDepartamentoForm();
+            consDep.setVisible(true);
+        } catch (IOException es) {
+
+        }
+    }//GEN-LAST:event_mnuConsDepartamentoActionPerformed
+
+    public void dataHora() {
+        txtUsuario.setText(usuarioLogado.getNome());
+        Date DataSistema = new Date();
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        data.setText(formato.format(DataSistema));
+
+        Timer timer = new Timer(1000, new hora());
+        timer.start();
     }
 
+    class hora implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Calendar now = Calendar.getInstance();
+            hora.setText(String.format("%1$tH:%1$tM:%1$tS", now));
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel data;
+    private javax.swing.JLabel hora;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JMenuItem mnuCadDepartamento;
+    private javax.swing.JMenuItem mnuCadEncarregado;
+    private javax.swing.JMenuItem mnuCadGerente;
+    private javax.swing.JMenuItem mnuConsDepartamento;
+    private javax.swing.JMenuItem mnuEditarPerfil;
+    private javax.swing.JLabel txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

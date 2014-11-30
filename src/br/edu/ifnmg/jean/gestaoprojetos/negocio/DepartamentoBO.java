@@ -52,4 +52,28 @@ public class DepartamentoBO {
 
         return resultadoPreencheTabela;
     }
+    
+    public String atualizarDpto(Departamento DEP) throws SQLException {
+        String mensagem = null;
+                
+        DepartamentoDAO departamentoDAO = new DepartamentoDAO();
+        Departamento DepExistente = null;
+
+        DepExistente = departamentoDAO.selecDepartamento(DEP.getNome(), DEP.getCodigo());
+
+        if (DepExistente == null || DepExistente.getCodigo().equals(DEP.getCodigo())) {
+            departamentoDAO.atualizarDepartamento(DEP, DEP.getCodigo());
+            
+            mensagem = "Departamento alterado com sucesso!";
+        } else {
+           mensagem = "Erro ao alterar o depertamento!";
+        }
+        return mensagem;
+    }
+    
+     public void excluirDepartamento(String codigo) throws SQLException{
+        DepartamentoDAO departamentoDAO = new DepartamentoDAO();
+        departamentoDAO.excluirDepartamento(codigo);
+
+    }
 }
