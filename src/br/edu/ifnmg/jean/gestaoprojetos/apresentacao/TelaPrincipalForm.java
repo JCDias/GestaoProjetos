@@ -293,7 +293,7 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         this.cadastrarUsuario("Encarregado");
     }//GEN-LAST:event_mnuCadEncarregadoActionPerformed
 
-    public void cadastrarUsuario(String tipo){
+    public void cadastrarUsuario(String tipo) {
         Departamento departamentoexiste = new Departamento();
 
         DepartamentoBO departamentoBO = new DepartamentoBO();
@@ -311,7 +311,7 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
 
         }
     }
-    
+
     public void dataHora() {
         txtUsuario.setText(userLogado.getNome());
         Date DataSistema = new Date();
@@ -336,11 +336,21 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         String cargo = this.userLogado.getCargo();
 
         if (cargo.equals("Diretor")) {
-
+            this.mnuLancarHora.setVisible(false);
+            this.mnuAtividadesAtraso.setVisible(false);
+            this.mnuProjetoAtividade.setVisible(false);
         } else if (cargo.equals("Gerente")) {
             this.mnuCadGerente.setVisible(false);
             this.mnuCadDepartamento.setVisible(false);
             this.mnuConsDepartamento.setVisible(false);
+            this.mnuConsGerente.setVisible(false);
+            this.mnuLancarHora.setVisible(false);
+        }else{
+            this.mnuCadastar.setVisible(false);
+            this.mnuConsultar.setVisible(false);
+            this.mnuProjetoProjeto.setVisible(false);
+            this.mnuAtividadesAtraso.setVisible(false);
+            this.mnuRelatorios.setVisible(false);
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

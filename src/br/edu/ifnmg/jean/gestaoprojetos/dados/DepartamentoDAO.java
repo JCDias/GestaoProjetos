@@ -20,7 +20,7 @@ public class DepartamentoDAO {
 
     private static final String SQL_SELECT_DEPARTAMENTO_POR_COD = "SELECT CODIGO, NOME FROM DEPARTAMENTOS WHERE DEPARTAMENTOS.ID_DEPARTAMENTO = ?";
 
-    public Departamento selecionarDepartamentoPorCodigo(String COD_DEPARTAMENTO) throws SQLException {
+    public Departamento selecionarDepartamentoPorCodigo(String ID_DEPARTAMENTO) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
@@ -31,7 +31,7 @@ public class DepartamentoDAO {
             conexao = BancoDadosUtil.getConnection();
 
             comando = conexao.prepareStatement(SQL_SELECT_DEPARTAMENTO_POR_COD);
-            comando.setString(1, COD_DEPARTAMENTO);
+            comando.setString(1, ID_DEPARTAMENTO);
 
             resultado = comando.executeQuery();
 

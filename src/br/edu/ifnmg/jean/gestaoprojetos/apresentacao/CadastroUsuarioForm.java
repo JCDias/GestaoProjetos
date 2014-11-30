@@ -335,18 +335,37 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
             usuario.setCargo(cargo);
             usuario.setSenha(senhaCriptografada);
             usuario.setDepartamento(departamento);
-
+            
+            //Cadastrar Gerente
             if (this.tipo.equals("Gerente")) {
                 try {
-                    usuarioBO.validarGerente(usuario);
-                    JOptionPane.showMessageDialog(this, "Gerente cadastrado com sucesso!", "Cadastro de Usuário", JOptionPane.INFORMATION_MESSAGE);
-                    logger.info("Gerente criado com sucesso. nome: "+nome);
-                    btnLimparActionPerformed(evt);
+                    String validaGerente = usuarioBO.validarGerente(usuario);
+                    if (validaGerente == null) {
+                        JOptionPane.showMessageDialog(this, "Gerente cadastrado com sucesso!", "Cadastro de Gerente", JOptionPane.INFORMATION_MESSAGE);
+                        logger.info("Gerente criado com sucesso. nome: " + nome);
+                        btnLimparActionPerformed(evt);
+                    } else {
+                        JOptionPane.showMessageDialog(this, validaGerente, "Cadastro de Gerente", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 } catch (SQLException ex) {
-                    logger.error("Erro ao inserir gerente "+ex.getMessage());
+                    logger.error("Erro ao inserir gerente " + ex.getMessage());
                 }
-            }else{
-                
+            } 
+            
+            //Cadastrar Encarregado
+            if (this.tipo.equals("Encarregado")) {
+                try {
+                    String validaEncarregado = usuarioBO.validaEncarregado(usuario,userLogado);
+                    if (validaEncarregado == null) {
+                        JOptionPane.showMessageDialog(this, "Encarregado cadastrado com sucesso!", "Cadastro de Encarregado", JOptionPane.INFORMATION_MESSAGE);
+                        logger.info("Gerente criado com sucesso. nome: " + nome);
+                        btnLimparActionPerformed(evt);
+                    } else {
+                        JOptionPane.showMessageDialog(this, validaEncarregado, "Cadastro de Encarregado", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } catch (SQLException ex) {
+                    logger.error("Erro ao inserir encarregado " + ex.getMessage());
+                }
             }
 
         } else {

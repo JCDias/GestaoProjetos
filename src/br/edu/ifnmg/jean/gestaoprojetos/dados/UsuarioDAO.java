@@ -18,8 +18,8 @@ import java.sql.SQLException;
 public class UsuarioDAO {
     
     //Selecionar gerente
-    private static final String SQL_SELECT_GERENTE = "SELECT  NOME, CARGO, SENHA, EMAIL, ID_DEPARTAMENTO , ID_USUARIO FROM USUARIO WHERE NOME = ? AND CARGO = ?";
-    public Usuario selecionarGerente(String Nome, String cargo) throws SQLException {
+    private static final String SQL_SELECT_USUARIO_EMAIL = "SELECT  NOME, CARGO, SENHA, EMAIL, ID_DEPARTAMENTO , ID_USUARIO FROM USUARIO WHERE EMAIL = ?";
+    public Usuario selecionarUsuarioEmail(String email) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
@@ -29,9 +29,8 @@ public class UsuarioDAO {
 
             conexao = BancoDadosUtil.getConnection();
 
-            comando = conexao.prepareStatement(SQL_SELECT_GERENTE);
-            comando.setString(1, Nome);
-            comando.setString(2, cargo);
+            comando = conexao.prepareStatement(SQL_SELECT_USUARIO_EMAIL);
+            comando.setString(1, email);
             resultado = comando.executeQuery();
 
             if (resultado.next()) {
@@ -65,28 +64,28 @@ public class UsuarioDAO {
     }
     
     //Verificar se já existe gerente para o departamento escolhido
-    private static final String SQL_SELECT_GERENTE_POR_DEPARTAMENTO = "SELECT  NOME, EMAIL, SENHA, CARGO, DEPARTAMENTOS.NOME, ID_USUARIO FROM USUARIO "
-            + "inner join DEPARTAMENTOS on (DEPARTAMENTOS.CODIGO =  USUARIO.ID_DEPARTAMENTO)"
-            + "WHERE USUARIO.CARGO =  ?  AND  USUARIO.ID_DEPARTAMENTO = ?";
-    public Usuario selecionarGerentePorDepartamento(String CodDepartamento, String Tipo) throws SQLException {
+    private static final String SQL_SELECT_GERENTE_POR_DEPARTAMENTO = "SELECT NOME, EMAIL, CARGO FROM USUARIO JOIN DEPARTAMENTOS ON USUARIO.ID_DEPARTAMENTO = DEPARTAMENTOS.ID_DEPARTAMENTO WHERE USUARIO.ID_DEPARTAMENTO = ? AND USUARIO.CARGO = ?";
+    public Usuario selecionarGerentePorDepartamento(String CodDepartamento, String cargo) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
         Usuario user = null;
-
+        System.out.println("Código departamento "+CodDepartamento);
+        int id_departamento = selecionarIdDepartamento(CodDepartamento);
+        System.out.println("Valor do Id_departamento "+id_departamento);
         try {
 
             conexao = BancoDadosUtil.getConnection();
 
             comando = conexao.prepareStatement(SQL_SELECT_GERENTE_POR_DEPARTAMENTO);
-            comando.setString(1, Tipo);
-            comando.setString(2, CodDepartamento);
+            comando.setInt(1, id_departamento);
+            comando.setString(2, cargo);
             resultado = comando.executeQuery();
 
             if (resultado.next()) {
                 user = new Usuario();
                 user.setNome(resultado.getString("NOME"));
-                user.setCargo(resultado.getString("Cargo"));
+                user.setCargo(resultado.getString("CARGO"));
                 user.setSenha(resultado.getString("SENHA"));
                 user.setEmail(resultado.getString("EMAIL"));
                 user.setId_usuario(resultado.getInt("ID_USUARIO"));
@@ -118,23 +117,25 @@ public class UsuarioDAO {
     public void CadastrarUsuario(Usuario user) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
-        System.out.println("Dento do cadastar usuario");
+        
+        int id_departamento = selecionarIdDepartamento(user.getDepartamento().getCodigo());
+        
         try {
 
             conexao = BancoDadosUtil.getConnection();
 
-            //verificar porque não esta commitando
+            
                 comando = conexao.prepareStatement(SQL_INSERT_USUARIO);
 
             comando.setString(1, user.getNome());
             comando.setString(2, user.getCargo());
             comando.setString(3, user.getSenha());
             comando.setString(4, user.getEmail());
-            comando.setString(5, user.getDepartamento().getCodigo());
+            comando.setInt(5, id_departamento);
 
             comando.execute();
             conexao.commit();
-            System.out.println("depois d comit");
+            
         } catch (Exception e) {
             if (conexao != null) {
                 conexao.rollback();
@@ -147,5 +148,44 @@ public class UsuarioDAO {
                 conexao.close();
             }
         }
+    }
+    
+    private static final String SQL_SELECT_ID_DEPARTAMENTO_CODIGO = "SELECT ID_DEPARTAMENTO FROM DEPARTAMENTOS WHERE CODIGO = ?";
+    private int selecionarIdDepartamento(String codigo) throws SQLException{
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        int id_departamento = -1;
+        
+       try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_ID_DEPARTAMENTO_CODIGO);
+            
+            comando.setString(1, codigo);
+            
+            resultado = comando.executeQuery();
+            
+            if (resultado.next()) {
+                id_departamento = resultado.getInt("ID_DEPARTAMENTO");
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return id_departamento;
+       
     }
 }
