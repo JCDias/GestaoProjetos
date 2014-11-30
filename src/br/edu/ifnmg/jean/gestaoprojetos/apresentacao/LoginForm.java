@@ -185,8 +185,8 @@ static Logger logger = Logger.getLogger(LoginForm.class);
             try {
                 usuarioLogado = loginBO.Logar(email, senhaCriptografada);
                 if(usuarioLogado != null){
-                    TelaPrincipalForm tp = new TelaPrincipalForm(usuarioLogado);
-                    tp.setVisible(true);
+                    TelaPrincipalForm telaPrincipal = new TelaPrincipalForm(usuarioLogado);
+                    telaPrincipal.setVisible(true);
                     this.dispose();
                 }else{
                     JOptionPane.showMessageDialog(null, "Email ou senha inválidos!", "ERRO", JOptionPane.ERROR_MESSAGE);

@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -208,7 +209,7 @@ public class DepartamentoDAO {
         }
     }
 
-    //Deletar usuário
+    //Deletar departamento
     private static final String SQL_DELETE_DEPARTAMENTO = "DELETE FROM DEPARTAMENTOS WHERE  CODIGO = ?";
 
     public void excluirDepartamento(String Cod_Departamento) throws SQLException {
@@ -238,5 +239,127 @@ public class DepartamentoDAO {
                 conexao.close();
             }
         }
+    }
+    
+    //Selecionar todos os departamentos
+     private static final String SQL_SELECT_TODOS = "SELECT CODIGO, NOME FROM DEPARTAMENTOS";
+    public Departamento selecionarTodosDepartamentos() throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        Departamento DEP = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_TODOS);
+
+            resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                DEP = new Departamento();
+
+                DEP.setNome(resultado.getString("NOME"));
+                DEP.setCodigo(resultado.getString("CODIGO"));
+
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return DEP;
+    }
+    
+    //Retorna uma lista de departamentos
+    public ArrayList<String> comboBoxDepartamentos() throws SQLException {
+        ArrayList<String> Departamentos = new ArrayList<>();
+
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_SELECT_TODOS);
+
+            resultado = comando.executeQuery();
+            Departamentos.removeAll(Departamentos);
+
+            while (resultado.next()) {
+                Departamentos.add(resultado.getString("NOME"));
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return Departamentos;
+    }
+    
+    //Selecionar departamento por nome
+    private static final String SQL_SELECT_DEPARTAMENTO_POR_NOME = "SELECT CODIGO, NOME FROM DEPARTAMENTOS WHERE DEPARTAMENTOS.NOME LIKE ?";
+    
+    public Departamento selecionarDepartamentoPorNome(String NOME_DEPARTAMENTO) throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        Departamento DEP = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_DEPARTAMENTO_POR_NOME);
+            comando.setString(1, NOME_DEPARTAMENTO);
+
+            resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                DEP = new Departamento();
+
+                DEP.setNome(resultado.getString("NOME"));
+                DEP.setCodigo(resultado.getString("CODIGO"));
+
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return DEP;
     }
 }

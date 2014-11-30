@@ -5,10 +5,13 @@
  */
 package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
+import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.negocio.DepartamentoBO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,15 +24,16 @@ import javax.swing.Timer;
  */
 public class TelaPrincipalForm extends javax.swing.JFrame {
 
-    Usuario usuarioLogado = new Usuario();
+    Usuario userLogado = new Usuario();
 
     /**
      * Creates new form TelaPrincipalForm
      */
     public TelaPrincipalForm(Usuario usuarioLogado) {
         initComponents();
-        this.usuarioLogado = usuarioLogado;
+        this.userLogado = usuarioLogado;
         this.dataHora();
+        this.tipoUsuario();
     }
 
     /**
@@ -48,20 +52,28 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         data = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        mnuCadastar = new javax.swing.JMenu();
         mnuCadDepartamento = new javax.swing.JMenuItem();
         mnuCadGerente = new javax.swing.JMenuItem();
         mnuCadEncarregado = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        mnuConsultar = new javax.swing.JMenu();
         mnuConsDepartamento = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
+        mnuConsGerente = new javax.swing.JMenuItem();
+        mnuConsEncarregado = new javax.swing.JMenuItem();
+        mnuProjeto = new javax.swing.JMenu();
+        mnuProjetoProjeto = new javax.swing.JMenuItem();
+        mnuProjetoAtividade = new javax.swing.JMenuItem();
+        mnuAtividadesAtraso = new javax.swing.JMenuItem();
+        mnuLancarHora = new javax.swing.JMenuItem();
+        mnuRelatorios = new javax.swing.JMenu();
+        mnuOpcoes = new javax.swing.JMenu();
         mnuEditarPerfil = new javax.swing.JMenuItem();
-        jMenu5 = new javax.swing.JMenu();
+        mnuSair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Tela Principal");
+        setTitle("Sistema de Gestão de Projetos");
         setExtendedState(6);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -110,6 +122,9 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/logo.png"))); // NOI18N
+        jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
         jMenuBar1.setAlignmentY(0.0F);
         jMenuBar1.setBorderPainted(false);
         jMenuBar1.setMaximumSize(new java.awt.Dimension(629, 32769));
@@ -117,9 +132,9 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         jMenuBar1.setName(""); // NOI18N
         jMenuBar1.setPreferredSize(new java.awt.Dimension(271, 40));
 
-        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/easymoblog.png"))); // NOI18N
-        jMenu1.setText("Cadastrar    ");
-        jMenu1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mnuCadastar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/easymoblog.png"))); // NOI18N
+        mnuCadastar.setText("Cadastrar    ");
+        mnuCadastar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         mnuCadDepartamento.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.ALT_MASK));
         mnuCadDepartamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/folder_blue.png"))); // NOI18N
@@ -129,7 +144,7 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
                 mnuCadDepartamentoActionPerformed(evt);
             }
         });
-        jMenu1.add(mnuCadDepartamento);
+        mnuCadastar.add(mnuCadDepartamento);
 
         mnuCadGerente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.ALT_MASK));
         mnuCadGerente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/kuser.png"))); // NOI18N
@@ -139,17 +154,22 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
                 mnuCadGerenteActionPerformed(evt);
             }
         });
-        jMenu1.add(mnuCadGerente);
+        mnuCadastar.add(mnuCadGerente);
 
         mnuCadEncarregado.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.event.InputEvent.ALT_MASK));
         mnuCadEncarregado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/Login Manager.png"))); // NOI18N
         mnuCadEncarregado.setText("Encarregado");
-        jMenu1.add(mnuCadEncarregado);
+        mnuCadEncarregado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCadEncarregadoActionPerformed(evt);
+            }
+        });
+        mnuCadastar.add(mnuCadEncarregado);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(mnuCadastar);
 
-        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/kfilereplace.png"))); // NOI18N
-        jMenu2.setText("Consultar     ");
+        mnuConsultar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/kfilereplace.png"))); // NOI18N
+        mnuConsultar.setText("Consultar     ");
 
         mnuConsDepartamento.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.CTRL_MASK));
         mnuConsDepartamento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/folder_blue.png"))); // NOI18N
@@ -159,32 +179,64 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
                 mnuConsDepartamentoActionPerformed(evt);
             }
         });
-        jMenu2.add(mnuConsDepartamento);
+        mnuConsultar.add(mnuConsDepartamento);
 
-        jMenuBar1.add(jMenu2);
+        mnuConsGerente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.CTRL_MASK));
+        mnuConsGerente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/kuser.png"))); // NOI18N
+        mnuConsGerente.setText("Gerente");
+        mnuConsultar.add(mnuConsGerente);
 
-        jMenu4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/Volume Manager.png"))); // NOI18N
-        jMenu4.setText("Relatórios    ");
-        jMenuBar1.add(jMenu4);
+        mnuConsEncarregado.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.event.InputEvent.CTRL_MASK));
+        mnuConsEncarregado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/Login Manager.png"))); // NOI18N
+        mnuConsEncarregado.setText("Encarregado");
+        mnuConsultar.add(mnuConsEncarregado);
 
-        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/configure.png"))); // NOI18N
-        jMenu3.setText("Opções     ");
+        jMenuBar1.add(mnuConsultar);
+
+        mnuProjeto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/knotes.png"))); // NOI18N
+        mnuProjeto.setText("Projeto        ");
+
+        mnuProjetoProjeto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, java.awt.event.InputEvent.SHIFT_MASK));
+        mnuProjetoProjeto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/Linspire Quickstart Guide.png"))); // NOI18N
+        mnuProjetoProjeto.setText("Projetos");
+        mnuProjeto.add(mnuProjetoProjeto);
+
+        mnuProjetoAtividade.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.SHIFT_MASK));
+        mnuProjetoAtividade.setText("Atividades");
+        mnuProjeto.add(mnuProjetoAtividade);
+
+        mnuAtividadesAtraso.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.event.InputEvent.SHIFT_MASK));
+        mnuAtividadesAtraso.setText("Atividades em Atraso");
+        mnuProjeto.add(mnuAtividadesAtraso);
+
+        mnuLancarHora.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.SHIFT_MASK));
+        mnuLancarHora.setText("Lançar Horas");
+        mnuProjeto.add(mnuLancarHora);
+
+        jMenuBar1.add(mnuProjeto);
+
+        mnuRelatorios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/Volume Manager.png"))); // NOI18N
+        mnuRelatorios.setText("Relatórios    ");
+        jMenuBar1.add(mnuRelatorios);
+
+        mnuOpcoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/configure.png"))); // NOI18N
+        mnuOpcoes.setText("Opções     ");
 
         mnuEditarPerfil.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F11, 0));
         mnuEditarPerfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/aim.png"))); // NOI18N
         mnuEditarPerfil.setText("Editar perfil");
-        jMenu3.add(mnuEditarPerfil);
+        mnuOpcoes.add(mnuEditarPerfil);
 
-        jMenuBar1.add(jMenu3);
+        jMenuBar1.add(mnuOpcoes);
 
-        jMenu5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/shutdown.png"))); // NOI18N
-        jMenu5.setText("Sair");
-        jMenu5.addMouseListener(new java.awt.event.MouseAdapter() {
+        mnuSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/shutdown.png"))); // NOI18N
+        mnuSair.setText("Sair");
+        mnuSair.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu5MouseClicked(evt);
+                mnuSairMouseClicked(evt);
             }
         });
-        jMenuBar1.add(jMenu5);
+        jMenuBar1.add(mnuSair);
 
         setJMenuBar(jMenuBar1);
 
@@ -193,11 +245,15 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 331, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -205,7 +261,7 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mnuCadGerenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadGerenteActionPerformed
-
+        this.cadastrarUsuario("Gerente");
     }//GEN-LAST:event_mnuCadGerenteActionPerformed
 
     private void mnuCadDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadDepartamentoActionPerformed
@@ -217,12 +273,12 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mnuCadDepartamentoActionPerformed
 
-    private void jMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu5MouseClicked
+    private void mnuSairMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mnuSairMouseClicked
         int resp = JOptionPane.showConfirmDialog(this, "Deseja realmente sair?", "Sair", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (resp == 0) {
             System.exit(0);
         }
-    }//GEN-LAST:event_jMenu5MouseClicked
+    }//GEN-LAST:event_mnuSairMouseClicked
 
     private void mnuConsDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuConsDepartamentoActionPerformed
         try {
@@ -233,8 +289,31 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mnuConsDepartamentoActionPerformed
 
+    private void mnuCadEncarregadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadEncarregadoActionPerformed
+        this.cadastrarUsuario("Encarregado");
+    }//GEN-LAST:event_mnuCadEncarregadoActionPerformed
+
+    public void cadastrarUsuario(String tipo){
+        Departamento departamentoexiste = new Departamento();
+
+        DepartamentoBO departamentoBO = new DepartamentoBO();
+        try {
+            departamentoexiste = departamentoBO.selecionarTodosDepratamentos();
+
+            if (departamentoexiste == null) {
+                JOptionPane.showMessageDialog(null, "É necessário cadastrar um departamento primeiro!!", "ERRO", JOptionPane.ERROR_MESSAGE);
+            } else {
+
+                CadastroUsuarioForm cadUserForm = new CadastroUsuarioForm(tipo, userLogado);
+                cadUserForm.setVisible(true);
+            }
+        } catch (SQLException ex) {
+
+        }
+    }
+    
     public void dataHora() {
-        txtUsuario.setText(usuarioLogado.getNome());
+        txtUsuario.setText(userLogado.getNome());
         Date DataSistema = new Date();
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         data.setText(formato.format(DataSistema));
@@ -251,24 +330,45 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
             hora.setText(String.format("%1$tH:%1$tM:%1$tS", now));
         }
     }
+
+    //FUnção para ocultar itens da tela de acordo com o tipo de usuário cadastrado
+    public void tipoUsuario() {
+        String cargo = this.userLogado.getCargo();
+
+        if (cargo.equals("Diretor")) {
+
+        } else if (cargo.equals("Gerente")) {
+            this.mnuCadGerente.setVisible(false);
+            this.mnuCadDepartamento.setVisible(false);
+            this.mnuConsDepartamento.setVisible(false);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel data;
     private javax.swing.JLabel hora;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenu jMenu5;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JMenuItem mnuAtividadesAtraso;
     private javax.swing.JMenuItem mnuCadDepartamento;
     private javax.swing.JMenuItem mnuCadEncarregado;
     private javax.swing.JMenuItem mnuCadGerente;
+    private javax.swing.JMenu mnuCadastar;
     private javax.swing.JMenuItem mnuConsDepartamento;
+    private javax.swing.JMenuItem mnuConsEncarregado;
+    private javax.swing.JMenuItem mnuConsGerente;
+    private javax.swing.JMenu mnuConsultar;
     private javax.swing.JMenuItem mnuEditarPerfil;
+    private javax.swing.JMenuItem mnuLancarHora;
+    private javax.swing.JMenu mnuOpcoes;
+    private javax.swing.JMenu mnuProjeto;
+    private javax.swing.JMenuItem mnuProjetoAtividade;
+    private javax.swing.JMenuItem mnuProjetoProjeto;
+    private javax.swing.JMenu mnuRelatorios;
+    private javax.swing.JMenu mnuSair;
     private javax.swing.JLabel txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

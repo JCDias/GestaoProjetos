@@ -9,6 +9,7 @@ import br.edu.ifnmg.jean.gestaoprojetos.dados.DepartamentoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -74,6 +75,39 @@ public class DepartamentoBO {
      public void excluirDepartamento(String codigo) throws SQLException{
         DepartamentoDAO departamentoDAO = new DepartamentoDAO();
         departamentoDAO.excluirDepartamento(codigo);
+
+    }
+     
+    public Departamento selecionarTodosDepratamentos() throws SQLException{
+        DepartamentoDAO departamentoDAO = new DepartamentoDAO();
+        Departamento departamento = null;
+        
+        departamento = departamentoDAO.selecionarTodosDepartamentos();
+        
+        return departamento;
+    }
+    
+    //COnfigurar ComboBox
+    public ArrayList<String> ComboBoxDepartamentos() throws SQLException {
+
+        DepartamentoDAO depDAO = new DepartamentoDAO();
+        ArrayList<String> Departamentos = new ArrayList<>();
+
+        Departamentos = depDAO.comboBoxDepartamentos();
+
+        return Departamentos;
+
+    }
+    
+    //Selecionar departamento por nome
+    public Departamento selecionarDepartamentoPorNome(String NomeDepartamento) throws SQLException {
+
+        DepartamentoDAO depDAO = new DepartamentoDAO();
+        Departamento departamento = new Departamento();
+
+        departamento = depDAO.selecionarDepartamentoPorNome(NomeDepartamento);
+
+        return departamento;
 
     }
 }
