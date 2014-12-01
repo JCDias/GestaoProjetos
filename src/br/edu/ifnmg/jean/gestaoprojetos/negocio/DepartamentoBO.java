@@ -87,7 +87,7 @@ public class DepartamentoBO {
         return departamento;
     }
     
-    //COnfigurar ComboBox
+    //Configurar ComboBox
     public ArrayList<String> ComboBoxDepartamentos() throws SQLException {
 
         DepartamentoDAO depDAO = new DepartamentoDAO();

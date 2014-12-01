@@ -204,7 +204,7 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         int seleciona = tblDepartamentos.getSelectedRow();
-        if (seleciona > 0) {
+        if (seleciona >= 0) {
             this.jPanelEditar.setVisible(true);
             String codigo = tblDepartamentos.getModel().getValueAt(seleciona, 0).toString();
             String nome = tblDepartamentos.getModel().getValueAt(seleciona, 1).toString();
@@ -244,7 +244,7 @@ public class ConsultarDepartamentoForm extends javax.swing.JFrame {
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         int seleciona = tblDepartamentos.getSelectedRow();
-        if (seleciona > 0) {
+        if (seleciona >= 0) {
             String codigo = tblDepartamentos.getModel().getValueAt(seleciona, 0).toString();
             String nome = tblDepartamentos.getModel().getValueAt(seleciona, 1).toString();
             int resp = JOptionPane.showConfirmDialog(this, "Deseja Realmente excluir este departamento?", "Excluir", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);

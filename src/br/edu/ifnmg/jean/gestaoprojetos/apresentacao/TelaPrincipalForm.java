@@ -92,8 +92,8 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 234, Short.MAX_VALUE)
+                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -107,28 +107,23 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(hora, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel3)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(hora, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(data, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel3)))
+                .addGap(15, 15, 15))
         );
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/logo.png"))); // NOI18N
         jLabel4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jMenuBar1.setAlignmentY(0.0F);
         jMenuBar1.setBorderPainted(false);
         jMenuBar1.setMaximumSize(new java.awt.Dimension(629, 32769));
-        jMenuBar1.setMinimumSize(new java.awt.Dimension(0, 2));
         jMenuBar1.setName(""); // NOI18N
         jMenuBar1.setPreferredSize(new java.awt.Dimension(271, 40));
 
@@ -184,6 +179,11 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         mnuConsGerente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.CTRL_MASK));
         mnuConsGerente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/kuser.png"))); // NOI18N
         mnuConsGerente.setText("Gerente");
+        mnuConsGerente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuConsGerenteActionPerformed(evt);
+            }
+        });
         mnuConsultar.add(mnuConsGerente);
 
         mnuConsEncarregado.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.event.InputEvent.CTRL_MASK));
@@ -225,6 +225,11 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         mnuEditarPerfil.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F11, 0));
         mnuEditarPerfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/aim.png"))); // NOI18N
         mnuEditarPerfil.setText("Editar perfil");
+        mnuEditarPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuEditarPerfilActionPerformed(evt);
+            }
+        });
         mnuOpcoes.add(mnuEditarPerfil);
 
         jMenuBar1.add(mnuOpcoes);
@@ -292,6 +297,16 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
     private void mnuCadEncarregadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCadEncarregadoActionPerformed
         this.cadastrarUsuario("Encarregado");
     }//GEN-LAST:event_mnuCadEncarregadoActionPerformed
+
+    private void mnuConsGerenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuConsGerenteActionPerformed
+        ConsultarGerenteForm consGerente = new ConsultarGerenteForm();
+        consGerente.setVisible(true);
+    }//GEN-LAST:event_mnuConsGerenteActionPerformed
+
+    private void mnuEditarPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuEditarPerfilActionPerformed
+        EditarDadosUsuarioLogadoForm edit = new EditarDadosUsuarioLogadoForm(userLogado);
+        edit.setVisible(true);
+    }//GEN-LAST:event_mnuEditarPerfilActionPerformed
 
     public void cadastrarUsuario(String tipo) {
         Departamento departamentoexiste = new Departamento();

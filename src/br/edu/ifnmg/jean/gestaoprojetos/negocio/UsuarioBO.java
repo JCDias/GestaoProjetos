@@ -6,7 +6,9 @@
 package br.edu.ifnmg.jean.gestaoprojetos.negocio;
 
 import br.edu.ifnmg.jean.gestaoprojetos.dados.UsuarioDAO;
+import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,7 +65,7 @@ public class UsuarioBO {
         return false;
     }
 
-    //Vericar gerente
+    //Verificar gerente
     public String validarGerente(Usuario Gerente) throws SQLException {
         String mensagem = null;
         UsuarioDAO userDAO = new UsuarioDAO();
@@ -100,11 +102,11 @@ public class UsuarioBO {
         if (EncarregadoExistente == null) {
             if (usuarioLogado.getCargo().equals("Gerente")) {
                 if (usuarioLogado.getDepartamento().getCodigo().equals(encarregado.getDepartamento().getCodigo())) {
-                  userDAO.CadastrarUsuario(encarregado);
+                    userDAO.CadastrarUsuario(encarregado);
                 }
             }
-            
-            if(usuarioLogado.getCargo().equals("Diretor")){
+
+            if (usuarioLogado.getCargo().equals("Diretor")) {
                 userDAO.CadastrarUsuario(encarregado);
             }
 
@@ -112,6 +114,81 @@ public class UsuarioBO {
             mensagem = "Já existe um usuario cadastrado com este email!";
         }
 
+        return mensagem;
+    }
+
+    //preencher tabela gerente
+    public ResultSet ConfigurarTabelaGerente() throws SQLException {
+        UsuarioDAO Gerente = new UsuarioDAO();
+        ResultSet resultPreencherTabela = Gerente.preencherTabelaGerente();
+
+        return resultPreencherTabela;
+
+    }
+
+    //Excluir usuário
+    public void ExcluirUsuario(Usuario usuario) throws SQLException {
+
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        usuarioDAO.ExcluirUsuario(usuario);
+
+    }
+
+    //Valida dados  btnSalvar
+    public String validaDadosSalvar(String nome, String email) {
+        String mensagem = null;
+
+        if (validaEmail(email) == false) {
+            mensagem = "E-mail inválido";
+        }
+
+        if (nome.length() < 3) {
+            mensagem = "Nome muito curto";
+        }
+
+        if (nome.isEmpty() || email.isEmpty()) {
+            mensagem = "Prrencha todos os campos!";
+        }
+
+        return mensagem;
+    }
+
+    //Atualizar usuario
+    public String atualizarUsuario(Usuario user) throws SQLException {
+        String mensagem = null;
+
+        UsuarioDAO userDAO = new UsuarioDAO();
+
+        //Verifica se existe um usuario com o email difitado
+        Usuario usuarioExistente = userDAO.selecionarUsuarioEmailAtualizar(user.getEmail(), user.getId_usuario());
+
+        if (usuarioExistente == null) {
+            Usuario usuarioPorDepartmento = userDAO.selecionarGerentePorDepartamento(user.getDepartamento().getCodigo(), user.getCargo());
+            if (usuarioPorDepartmento == null) {
+                UsuarioDAO usuarioDAO = new UsuarioDAO();
+                usuarioDAO.AtulizaUsuario(user);
+            } else {
+                mensagem = "Este departamento já possui um gerente!";
+            }
+        } else {
+            mensagem = "Já existe um usuario cadastrado com este email!";
+        }
+        return mensagem;
+    }
+
+    //cadastar alteraçao no perfil
+    public String atualizaPerfil(Usuario user) throws SQLException {
+        String mensagem = null;
+
+        UsuarioDAO userDAO = new UsuarioDAO();
+        //Verifica se existe um usuario com o email difitado
+        Usuario usuarioExistente = userDAO.selecionarUsuarioEmailAtualizar(user.getEmail(), user.getId_usuario());
+        if (usuarioExistente == null) {
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            usuarioDAO.AtulizaPerfil(user);
+        } else {
+            mensagem = "Já existe um usuario cadastrado com este email!";
+        }
         return mensagem;
     }
 }

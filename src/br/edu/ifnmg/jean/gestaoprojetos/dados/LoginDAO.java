@@ -17,7 +17,7 @@ import java.sql.SQLException;
  */
 public class LoginDAO {
     
-    private static final String SQL_SELECT_LOGIN = "SELECT NOME, CARGO, SENHA, EMAIL, ID_DEPARTAMENTO FROM USUARIO WHERE EMAIL LIKE ? AND SENHA LIKE ?";
+    private static final String SQL_SELECT_LOGIN = "SELECT NOME, CARGO, SENHA, EMAIL, ID_DEPARTAMENTO, ID_USUARIO FROM USUARIO WHERE EMAIL LIKE ? AND SENHA LIKE ?";
 
     //Selecionar usuario
     public Usuario selecionarLogin(String login, String Senha) throws SQLException {
@@ -43,6 +43,7 @@ public class LoginDAO {
                 user.setCargo(resultado.getString("CARGO"));
                 user.setSenha(resultado.getString("SENHA"));
                 user.setEmail(resultado.getString("EMAIL"));
+                user.setId_usuario(resultado.getInt("ID_USUARIO"));
             
 
                 
