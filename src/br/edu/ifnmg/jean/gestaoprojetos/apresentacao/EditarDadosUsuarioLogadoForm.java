@@ -8,8 +8,14 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.Criptografia;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.UsuarioBO;
+import java.io.IOException;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import org.apache.log4j.Appender;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 /**
  *
@@ -19,12 +25,19 @@ public class EditarDadosUsuarioLogadoForm extends javax.swing.JFrame {
     
     private Usuario userlogado = new Usuario();
 
-    //Fazer config do log
+     static Logger logger = Logger.getLogger(EditarDadosUsuarioLogadoForm.class);
     public EditarDadosUsuarioLogadoForm(Usuario user) {
         initComponents();
         this.userlogado = user;
         this.setLocationRelativeTo(null);
         this.setarCampos();
+        try {
+            BasicConfigurator.configure();
+            Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
+            logger.addAppender(fileAppender);
+        } catch (IOException ex) {
+
+        }
     }
     
     @SuppressWarnings("unchecked")
@@ -239,10 +252,10 @@ public class EditarDadosUsuarioLogadoForm extends javax.swing.JFrame {
                 
                 usuarioBO.atualizaPerfil(user);
                 JOptionPane.showMessageDialog(null, "Dados Atualizados com Sucesso", "Atualizar perfil", JOptionPane.INFORMATION_MESSAGE);
-                //colocar log aki
+                logger.info("Dados do perfil Atualizados com Sucesso");
                 this.dispose();
             } catch (SQLException ex) {
-                
+                logger.error("Erro ao atualizar dados do perfil "+ex.getMessage());
             }
         } else {
             JOptionPane.showMessageDialog(null, valida, "Atualizar perfil", JOptionPane.INFORMATION_MESSAGE);

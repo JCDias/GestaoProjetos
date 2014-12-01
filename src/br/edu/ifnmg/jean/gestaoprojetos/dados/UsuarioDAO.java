@@ -394,4 +394,45 @@ public class UsuarioDAO {
             }
         }
     }
+    
+    //Preencher tabela encarragado
+    
+     private static final String SQL_SELECT_TODOS_ENCARREGADO_TABELA = "SELECT ID_USUARIO AS Código, NOME ,CARGO, DEPARTAMENTOS.NOME AS Departamento, EMAIL AS Email FROM USUARIO "
+            + "join DEPARTAMENTOS on (USUARIO.ID_DEPARTAMENTO =  DEPARTAMENTOS.ID_DEPARTAMENTO)"
+            + "WHERE CARGO = 'Encarregado' AND DEPARTAMENTOS.NOME = ?";
+     
+    public ResultSet preencherTabelaEncarregado(String Departamento) throws SQLException {
+
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_TODOS_ENCARREGADO_TABELA);
+            comando.setString(1, Departamento);
+
+            resultado = comando.executeQuery();
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+
+        return resultado;
+
+    }
 }

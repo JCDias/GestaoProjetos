@@ -1,6 +1,10 @@
 static Logger logger = Logger.getLogger(Classe.class);
 
 //Configuração do LOG4J
-        BasicConfigurator.configure();
-        Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
-        logger.addAppender(fileAppender);
+        try {
+            BasicConfigurator.configure();
+            Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
+            logger.addAppender(fileAppender);
+        } catch (IOException ex) {
+
+        }

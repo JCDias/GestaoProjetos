@@ -189,6 +189,11 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         mnuConsEncarregado.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.event.InputEvent.CTRL_MASK));
         mnuConsEncarregado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/Login Manager.png"))); // NOI18N
         mnuConsEncarregado.setText("Encarregado");
+        mnuConsEncarregado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuConsEncarregadoActionPerformed(evt);
+            }
+        });
         mnuConsultar.add(mnuConsEncarregado);
 
         jMenuBar1.add(mnuConsultar);
@@ -307,6 +312,11 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         EditarDadosUsuarioLogadoForm edit = new EditarDadosUsuarioLogadoForm(userLogado);
         edit.setVisible(true);
     }//GEN-LAST:event_mnuEditarPerfilActionPerformed
+
+    private void mnuConsEncarregadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuConsEncarregadoActionPerformed
+        ConsultarEncarregadoForm consEncarregado = new ConsultarEncarregadoForm(userLogado);
+        consEncarregado.setVisible(true);
+    }//GEN-LAST:event_mnuConsEncarregadoActionPerformed
 
     public void cadastrarUsuario(String tipo) {
         Departamento departamentoexiste = new Departamento();

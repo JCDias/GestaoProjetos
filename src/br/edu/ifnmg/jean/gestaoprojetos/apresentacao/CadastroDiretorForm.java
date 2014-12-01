@@ -263,9 +263,6 @@ public class CadastroDiretorForm extends javax.swing.JFrame {
                 new LoginForm().setVisible(true);
             } catch (SQLException ex) {
                 logger.error("Erro ao cadastrar diretor "+ex.getMessage());
-                // COlocar log4j2 aki ERROR
-            } catch (IOException ex) {
-                
             }
         }else{
             JOptionPane.showMessageDialog(null, valida, "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);

@@ -175,6 +175,26 @@ public class UsuarioBO {
         }
         return mensagem;
     }
+    
+    //Atualizar usuario
+    public String atualizarEncarregado(Usuario user) throws SQLException {
+        String mensagem = null;
+
+        UsuarioDAO userDAO = new UsuarioDAO();
+
+        //Verifica se existe um usuario com o email difitado
+        Usuario usuarioExistente = userDAO.selecionarUsuarioEmailAtualizar(user.getEmail(), user.getId_usuario());
+
+        if (usuarioExistente == null) {
+           
+                UsuarioDAO usuarioDAO = new UsuarioDAO();
+                usuarioDAO.AtulizaUsuario(user);
+            
+        } else {
+            mensagem = "Já existe um usuario cadastrado com este email!";
+        }
+        return mensagem;
+    }
 
     //cadastar alteraçao no perfil
     public String atualizaPerfil(Usuario user) throws SQLException {
@@ -190,5 +210,14 @@ public class UsuarioBO {
             mensagem = "Já existe um usuario cadastrado com este email!";
         }
         return mensagem;
+    }
+    
+    public ResultSet preencheTabelaEncarregado(String Departamento) throws SQLException {
+        
+        UsuarioDAO Encarregado = new UsuarioDAO();
+        ResultSet resultPreencherTabela = Encarregado.preencherTabelaEncarregado(Departamento);
+
+        return resultPreencherTabela;
+
     }
 }

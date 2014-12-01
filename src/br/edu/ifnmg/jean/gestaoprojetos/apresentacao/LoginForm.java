@@ -25,17 +25,23 @@ import org.apache.log4j.PatternLayout;
  * @author JEAN CARLOS
  */
 public class LoginForm extends javax.swing.JFrame {
-static Logger logger = Logger.getLogger(LoginForm.class);
+
+    static Logger logger = Logger.getLogger(LoginForm.class);
+
     /**
      * Creates new form LoginForm
      */
-    public LoginForm() throws IOException {
+    public LoginForm() {
         initComponents();
         this.setLocationRelativeTo(null);
         //Configuração do LOG4J
-        BasicConfigurator.configure();
-        Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
-        logger.addAppender(fileAppender);
+        try {
+            BasicConfigurator.configure();
+            Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
+            logger.addAppender(fileAppender);
+        } catch (IOException ex) {
+
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -168,66 +174,61 @@ static Logger logger = Logger.getLogger(LoginForm.class);
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         //Usuario que efutua login
         Usuario usuarioLogado = new Usuario();
-        
+
         //Receber valores da tela
         String email = txtEmail.getText().trim();
         String senha = txtSenha.getText().trim();
-        
+
         //Chamar validação dos campos
         LoginBO loginBO = new LoginBO();
         String valida = loginBO.validaDados(email, senha);
-        
-        if(valida==null){
-            
+
+        if (valida == null) {
+
             Criptografia criptografia = new Criptografia();
             String senhaCriptografada = criptografia.criptografar(senha);
-            
+
             try {
                 usuarioLogado = loginBO.Logar(email, senhaCriptografada);
-                if(usuarioLogado != null){
+                if (usuarioLogado != null) {
                     TelaPrincipalForm telaPrincipal = new TelaPrincipalForm(usuarioLogado);
                     telaPrincipal.setVisible(true);
                     this.dispose();
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Email ou senha inválidos!", "ERRO", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (SQLException ex) {
-                logger.error("Erro ao validar login "+ex.getMessage());
+                logger.error("Erro ao validar login " + ex.getMessage());
             }
-            
-        }else{
+
+        } else {
             JOptionPane.showMessageDialog(null, valida, "ERRO", JOptionPane.ERROR_MESSAGE);
         }
-        
-        
+
+
     }//GEN-LAST:event_btnEntrarActionPerformed
 
-    
     public static void main(String args[]) throws SQLException {
         Usuario user = new Usuario();
         DiretorBO diretor = new DiretorBO();
         user = diretor.selecionarDiretor();
-        
-        if(user==null){
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new CadastroDiretorForm().setVisible(true);
-                } catch (IOException ex) {
-                    
+
+        if (user == null) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    try {
+                        new CadastroDiretorForm().setVisible(true);
+                    } catch (IOException ex) {
+
+                    }
                 }
-            }
-        });
-        }else{
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new LoginForm().setVisible(true);
-                } catch (IOException ex) {
-                    
-                }
-            }
-        });
+            });
+        } else {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                        new LoginForm().setVisible(true);
+                    }
+            });
         }
     }
 
