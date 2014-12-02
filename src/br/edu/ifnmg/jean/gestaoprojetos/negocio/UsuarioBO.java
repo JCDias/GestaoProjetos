@@ -75,7 +75,7 @@ public class UsuarioBO {
         //Verificar se já exirte usuario cadastrardo com o mesmo email
         if (GerenteExistente == null) {
 
-            Usuario gerentePorDepartmento = userDAO.selecionarGerentePorDepartamento(Gerente.getDepartamento().getCodigo(), Gerente.getCargo());
+            Usuario gerentePorDepartmento = userDAO.selecionarGerentePorDepartamento(Gerente.getDepartamento().getCodigo(), Gerente.getCargo(), Gerente.getId_usuario());
 
             //Verificar se o departamento selecionado não possui um gerente
             if (gerentePorDepartmento == null) {
@@ -163,7 +163,8 @@ public class UsuarioBO {
         Usuario usuarioExistente = userDAO.selecionarUsuarioEmailAtualizar(user.getEmail(), user.getId_usuario());
 
         if (usuarioExistente == null) {
-            Usuario usuarioPorDepartmento = userDAO.selecionarGerentePorDepartamento(user.getDepartamento().getCodigo(), user.getCargo());
+            System.out.println("id "+user.getId_usuario());
+            Usuario usuarioPorDepartmento = userDAO.selecionarGerentePorDepartamento(user.getDepartamento().getCodigo(), user.getCargo(), user.getId_usuario());
             if (usuarioPorDepartmento == null) {
                 UsuarioDAO usuarioDAO = new UsuarioDAO();
                 usuarioDAO.AtulizaUsuario(user);

@@ -65,9 +65,9 @@ public class UsuarioDAO {
     }
 
     //Verificar se já existe gerente para o departamento escolhido
-    private static final String SQL_SELECT_GERENTE_POR_DEPARTAMENTO = "SELECT NOME, EMAIL, CARGO FROM USUARIO JOIN DEPARTAMENTOS ON USUARIO.ID_DEPARTAMENTO = DEPARTAMENTOS.ID_DEPARTAMENTO WHERE USUARIO.ID_DEPARTAMENTO = ? AND USUARIO.CARGO = ?";
+    private static final String SQL_SELECT_GERENTE_POR_DEPARTAMENTO = "SELECT NOME, EMAIL, CARGO FROM USUARIO JOIN DEPARTAMENTOS ON USUARIO.ID_DEPARTAMENTO = DEPARTAMENTOS.ID_DEPARTAMENTO WHERE USUARIO.ID_DEPARTAMENTO = ? AND USUARIO.CARGO = ? AND USUARIO.ID_USUARIO <> ?";
 
-    public Usuario selecionarGerentePorDepartamento(String CodDepartamento, String cargo) throws SQLException {
+    public Usuario selecionarGerentePorDepartamento(String CodDepartamento, String cargo, int id_usuario) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
@@ -82,6 +82,7 @@ public class UsuarioDAO {
             comando = conexao.prepareStatement(SQL_SELECT_GERENTE_POR_DEPARTAMENTO);
             comando.setInt(1, id_departamento);
             comando.setString(2, cargo);
+            comando.setInt(2, id_usuario);
             resultado = comando.executeQuery();
 
             if (resultado.next()) {
