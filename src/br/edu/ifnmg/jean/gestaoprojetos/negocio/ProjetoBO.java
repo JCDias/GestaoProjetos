@@ -44,15 +44,15 @@ public class ProjetoBO {
 
     //Criar novo projeto
     public String CadastrarProjeto(Projeto projeto) throws SQLException {
-        
+
         String mensagem = null;
         ProjetoDAO projetDAO = new ProjetoDAO();
         //Verifica se existe um projeto com o mesmo nome no departamento
         Projeto projetoExistente = new Projeto();
         projetoExistente = projetDAO.selecionarNomeprojeto(projeto);
-        if (projetoExistente==null) {
+        if (projetoExistente == null) {
             projetDAO.cadastrarProjeto(projeto);
-        }else{
+        } else {
             mensagem = "Já existe um projeto cadastrado nesteb departamento com o mesmo nome!\n Por favor escolha outro nome.";
         }
         return mensagem;
@@ -69,7 +69,7 @@ public class ProjetoBO {
 
         return departamento;
     }
-    
+
     public ResultSet preencheTabela(String Departamento) throws SQLException {
         ProjetoDAO projet = new ProjetoDAO();
         ResultSet resultPreencherTabela = projet.preencherTabela(Departamento);
@@ -77,8 +77,8 @@ public class ProjetoBO {
         return resultPreencherTabela;
 
     }
-    
-     //Configurar ComboBox
+
+    //Configurar ComboBox
     public ArrayList<String> ComboBoxDepartamentos() throws SQLException {
 
         DepartamentoDAO depDAO = new DepartamentoDAO();
@@ -87,6 +87,14 @@ public class ProjetoBO {
         Departamentos = depDAO.comboBoxDepartamentos();
 
         return Departamentos;
+
+    }
+
+    public void atualizarProjeto(Projeto projeto) throws SQLException {
+
+        ProjetoDAO projetDAO = new ProjetoDAO();
+
+        projetDAO.atualizarProjeto(projeto);
 
     }
 }

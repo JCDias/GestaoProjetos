@@ -145,8 +145,7 @@ public class ProjetoDAO {
         return projeto;
     }
     // Preencher tabela projetos
-    private static final String SQL_TODOS_PROJETOS_TABELA = "SELECT ID_PROJETO AS CÓDIGO ,  NOME  , DESCRICAO as DESCRIÇÃO ,DATE_FORMAT(DATA_INICIO, '%d-%m-%Y') as INÍCIO , DATE_FORMAT(DATA_TERMINIO, '%d-%m-%Y') as TÉRMINIO , DEPARTAMENTOS.NOME AS DEPARTAMENTO FROM PROJETO JOIN DEPARTAMENTOS ON (PROJETO.ID_DEPARTAMENTO =  DEPARTAMENTOS.ID_DEPARTAMENTO)"
-            + " WHERE DEPARTAMENTOS.NOME = ? ";
+    private static final String SQL_TODOS_PROJETOS_TABELA = "SELECT ID_PROJETO AS CÓDIGO ,  NOME  , DESCRICAO as DESCRIÇÃO ,DATA_INICIO as INÍCIO , DATA_TERMINIO as TÉRMINIO , DEPARTAMENTOS.NOME AS DEPARTAMENTO FROM PROJETO JOIN DEPARTAMENTOS ON (PROJETO.ID_DEPARTAMENTO =  DEPARTAMENTOS.ID_DEPARTAMENTO)  WHERE DEPARTAMENTOS.NOME = ?";
     public ResultSet preencherTabela(String Departamento) throws SQLException {
 
         Connection conexao = null;
@@ -180,5 +179,43 @@ public class ProjetoDAO {
 
         return resultado;
 
+    }
+    
+    //Inserir projeto
+    private static final String SQL_UPDATE_PROJETO = "UPDATE PROJETO SET NOME = ?, DESCRICAO = ?, DATA_INICIO = ?, DATA_TERMINIO = ? ID_DEPARTAMENTO = ? WHERE ID_PROJETO = ?";
+    public void atualizarProjeto(Projeto projeto) throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        
+        int id_departamento = selecionarIdDepartamento(projeto.getDepartamento().getCodigo());
+        
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_UPDATE_PROJETO);
+
+            comando.setString(1, projeto.getNome());
+            comando.setString(2, projeto.getDescricao());
+            comando.setDate(3, (Date) projeto.getDataInicio());
+            comando.setDate(4, (Date) projeto.getDataTerminio());
+            comando.setInt(5, id_departamento);
+            comando.setInt(5, projeto.getIdProjeto());
+
+            comando.execute();
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
     }
 }

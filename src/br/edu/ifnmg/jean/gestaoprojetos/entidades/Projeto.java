@@ -13,12 +13,21 @@ import java.sql.Date;
  */
 public class Projeto {
     
+    private int idProjeto;
     private String nome;
     private String descricao;
     private Date dataInicio;
     private Date dataTerminio;
     private Departamento departamento;
 
+    public int getIdProjeto() {
+        return idProjeto;
+    }
+
+    public void setIdProjeto(int idProjeto) {
+        this.idProjeto = idProjeto;
+    }
+    
     public String getNome() {
         return nome;
     }
