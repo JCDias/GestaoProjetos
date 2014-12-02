@@ -299,6 +299,11 @@ public class ConsultarProjetoForm extends javax.swing.JFrame {
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/button_cancel.png"))); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -319,9 +324,8 @@ public class ConsultarProjetoForm extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnNovo, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)))
+                    .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -443,15 +447,14 @@ public class ConsultarProjetoForm extends javax.swing.JFrame {
             projeto.setNome(nome);
             projeto.setDescricao(descricao);
             projeto.setDepartamento(departamento);
+            projeto.setIdProjeto(id_proj);
 
             try {
-                    //Converte e seta a data inicio e termino
-
+                //Converte e seta a data inicio e termino
                 dataInicio = formatarData(txtDataInicio.getText());
                 dataTermino = formatarData(txtDataTerminio.getText());
                 projeto.setDataInicio((java.sql.Date) dataInicio);
                 projeto.setDataTerminio((java.sql.Date) dataTermino);
-                projeto.setIdProjeto(id_proj);
             } catch (Exception ex) {
                 logger.error("Erro ao converter data " + ex.getMessage());
             }
@@ -469,6 +472,27 @@ public class ConsultarProjetoForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, valida, "Consultar Projeto ", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        int seleciona = TabelaProjetos.getSelectedRow();
+        if (seleciona >= 0) {
+            int resp = JOptionPane.showConfirmDialog(this, "Ao excluir um projeto os dados não podem mais serem recuperados.\nDeseja realmente excluir este projeto?", "Excluir", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            int codigo = (int) TabelaProjetos.getModel().getValueAt(seleciona, 0);
+            if (resp == 0) {
+                ProjetoBO projetoBO = new ProjetoBO();
+                try {
+                    projetoBO.excluirProjeto(codigo);
+                    JOptionPane.showMessageDialog(null, "Projeto excluido com sucesso!", "Consultar Projeto", JOptionPane.INFORMATION_MESSAGE);
+                    logger.info("Projeto "+TabelaProjetos.getModel().getValueAt(seleciona, 1).toString()+" excluido com sucesso!");
+                    this.tipoUsuario();
+                } catch (SQLException ex) {
+                    logger.error("Erro ao excluir projeto "+ex.getMessage());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione um projeto para excluir!", "Consultar Projeto", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     public void PreencherComboBoxSelecionaDepartamento() {
         ArrayList<String> Departamentos = new ArrayList<>();
@@ -495,7 +519,7 @@ public class ConsultarProjetoForm extends javax.swing.JFrame {
         String dia = (dataBD.substring(8, 10));
 
         String Data = (dia + "/" + mes + "/" + ano);
-        System.out.println(Data);
+
         return Data;
     }
 

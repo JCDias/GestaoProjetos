@@ -9,7 +9,6 @@ import br.edu.ifnmg.jean.gestaoprojetos.dados.DepartamentoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.dados.ProjetoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Projeto;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -89,12 +88,20 @@ public class ProjetoBO {
         return Departamentos;
 
     }
-
+    //Atualizar projeto
     public void atualizarProjeto(Projeto projeto) throws SQLException {
 
         ProjetoDAO projetDAO = new ProjetoDAO();
 
         projetDAO.atualizarProjeto(projeto);
 
+    }
+    
+    //Excluir Projeto
+    public void excluirProjeto(int id_projeto) throws SQLException{
+        
+        ProjetoDAO projetoDAO = new ProjetoDAO();
+        
+        projetoDAO.excluirProjeto(id_projeto);
     }
 }

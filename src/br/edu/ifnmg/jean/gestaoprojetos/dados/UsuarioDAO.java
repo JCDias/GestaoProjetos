@@ -72,9 +72,9 @@ public class UsuarioDAO {
         PreparedStatement comando = null;
         ResultSet resultado = null;
         Usuario user = null;
-        
+
         int id_departamento = selecionarIdDepartamento(CodDepartamento);
-        
+
         try {
 
             conexao = BancoDadosUtil.getConnection();
@@ -194,7 +194,7 @@ public class UsuarioDAO {
     }
 
     //Preencher a tabela de gerentes
-    private static final String SQL_SELECT_TODOS_GERENTE = "SELECT ID_USUARIO AS Código, NOME ,CARGO AS Cargo,DEPARTAMENTOS.NOME AS Departamento, EMAIL AS Email FROM USUARIO join DEPARTAMENTOS on (USUARIO.ID_DEPARTAMENTO =  DEPARTAMENTOS.ID_DEPARTAMENTO) WHERE CARGO = 'Gerente'";
+    private static final String SQL_SELECT_TODOS_GERENTE = "SELECT ID_USUARIO AS Código, NOME ,CARGO AS Cargo,DEPARTAMENTOS.NOME AS Departamento, EMAIL AS Email FROM USUARIO join DEPARTAMENTOS on (USUARIO.ID_DEPARTAMENTO =  DEPARTAMENTOS.ID_DEPARTAMENTO) WHERE CARGO = 'Gerente' ORDER BY NOME";
 
     public ResultSet preencherTabelaGerente() throws SQLException {
 
@@ -231,8 +231,7 @@ public class UsuarioDAO {
     }
 
     //Excluir usuarios ou encarregados
-    private static final String SQL_DELETE_UM_GERENTE = "DELETE FROM USUARIO WHERE ID_USUARIO = ?";
-    private static final String SQL_DELETE_UM_ENCARREGADO = "DELETE FROM USUARIO WHERE ID_USUARIO = ?";
+    private static final String SQL_DELETE = "DELETE FROM USUARIO WHERE ID_USUARIO = ?";
 
     public void ExcluirUsuario(Usuario usuario) throws SQLException {
         Connection conexao = null;
@@ -241,13 +240,8 @@ public class UsuarioDAO {
         try {
 
             conexao = BancoDadosUtil.getConnection();
-            if ("Gerente".equals(usuario.getCargo())) {
-                comando = conexao.prepareStatement(SQL_DELETE_UM_GERENTE);
-                comando.setInt(1, usuario.getId_usuario());
-            } else if ("Encarregado".equals(usuario.getCargo())) {
-                comando = conexao.prepareStatement(SQL_DELETE_UM_ENCARREGADO);
-                comando.setInt(1, usuario.getId_usuario());
-            }
+            comando = conexao.prepareStatement(SQL_DELETE);
+            comando.setInt(1, usuario.getId_usuario());
 
             comando.execute();
             conexao.commit();
@@ -362,7 +356,6 @@ public class UsuarioDAO {
 
     //Atualizar perfil 
     private static final String SQL_ATUALIZAR_PERFIL = "UPDATE USUARIO SET USUARIO.NOME = ?, USUARIO.EMAIL = ?, USUARIO.SENHA = ? WHERE ID_USUARIO = ?";
-    
 
     public void AtulizaPerfil(Usuario user) throws SQLException {
         Connection conexao = null;
@@ -395,13 +388,12 @@ public class UsuarioDAO {
             }
         }
     }
-    
+
     //Preencher tabela encarragado
-    
-     private static final String SQL_SELECT_TODOS_ENCARREGADO_TABELA = "SELECT ID_USUARIO AS Código, NOME ,CARGO, DEPARTAMENTOS.NOME AS Departamento, EMAIL AS Email FROM USUARIO "
+    private static final String SQL_SELECT_TODOS_ENCARREGADO_TABELA = "SELECT ID_USUARIO AS Código, NOME ,CARGO, DEPARTAMENTOS.NOME AS Departamento, EMAIL AS Email FROM USUARIO "
             + "join DEPARTAMENTOS on (USUARIO.ID_DEPARTAMENTO =  DEPARTAMENTOS.ID_DEPARTAMENTO)"
-            + "WHERE CARGO = 'Encarregado' AND DEPARTAMENTOS.NOME = ?";
-     
+            + "WHERE CARGO = 'Encarregado' AND DEPARTAMENTOS.NOME = ? ORDER BY NOME";
+
     public ResultSet preencherTabelaEncarregado(String Departamento) throws SQLException {
 
         Connection conexao = null;

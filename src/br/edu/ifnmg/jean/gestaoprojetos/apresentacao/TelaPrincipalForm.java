@@ -212,14 +212,17 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         mnuProjeto.add(mnuProjetoProjeto);
 
         mnuProjetoAtividade.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.SHIFT_MASK));
+        mnuProjetoAtividade.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/desktop.png"))); // NOI18N
         mnuProjetoAtividade.setText("Atividades");
         mnuProjeto.add(mnuProjetoAtividade);
 
         mnuAtividadesAtraso.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.event.InputEvent.SHIFT_MASK));
+        mnuAtividadesAtraso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/folder_red.png"))); // NOI18N
         mnuAtividadesAtraso.setText("Atividades em Atraso");
         mnuProjeto.add(mnuAtividadesAtraso);
 
         mnuLancarHora.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.SHIFT_MASK));
+        mnuLancarHora.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/karm 2.png"))); // NOI18N
         mnuLancarHora.setText("Lançar Horas");
         mnuProjeto.add(mnuLancarHora);
 

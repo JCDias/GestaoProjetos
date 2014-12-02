@@ -413,7 +413,7 @@ public class ConsultarEncarregadoForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnDemitirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDemitirActionPerformed
-          Usuario usuario = new Usuario();
+        Usuario usuario = new Usuario();
         int seleciona = tabelaEncarregado.getSelectedRow();
         if (seleciona >= 0) {
             String codigo = tabelaEncarregado.getModel().getValueAt(seleciona, 0).toString();

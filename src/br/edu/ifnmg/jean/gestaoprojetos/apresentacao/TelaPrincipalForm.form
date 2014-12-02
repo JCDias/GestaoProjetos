@@ -148,6 +148,9 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Shift+F2"/>
                 </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/desktop.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Atividades"/>
               </Properties>
             </MenuItem>
@@ -156,6 +159,9 @@
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Shift+F3"/>
                 </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/folder_red.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Atividades em Atraso"/>
               </Properties>
             </MenuItem>
@@ -163,6 +169,9 @@
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
                   <KeyStroke key="Shift+F4"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/karm 2.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Lan&#xe7;ar Horas"/>
               </Properties>

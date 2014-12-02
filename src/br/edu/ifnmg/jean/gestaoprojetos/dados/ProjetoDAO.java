@@ -145,7 +145,7 @@ public class ProjetoDAO {
         return projeto;
     }
     // Preencher tabela projetos
-    private static final String SQL_TODOS_PROJETOS_TABELA = "SELECT ID_PROJETO AS CÓDIGO ,  NOME  , DESCRICAO as DESCRIÇÃO ,DATA_INICIO as INÍCIO , DATA_TERMINIO as TÉRMINIO , DEPARTAMENTOS.NOME AS DEPARTAMENTO FROM PROJETO JOIN DEPARTAMENTOS ON (PROJETO.ID_DEPARTAMENTO =  DEPARTAMENTOS.ID_DEPARTAMENTO)  WHERE DEPARTAMENTOS.NOME = ?";
+    private static final String SQL_TODOS_PROJETOS_TABELA = "SELECT ID_PROJETO AS CÓDIGO ,  NOME  , DESCRICAO as DESCRIÇÃO ,DATA_INICIO as INÍCIO , DATA_TERMINIO as TÉRMINIO , DEPARTAMENTOS.NOME AS DEPARTAMENTO FROM PROJETO JOIN DEPARTAMENTOS ON (PROJETO.ID_DEPARTAMENTO =  DEPARTAMENTOS.ID_DEPARTAMENTO) WHERE DEPARTAMENTOS.NOME = ? ORDER BY NOME";
     public ResultSet preencherTabela(String Departamento) throws SQLException {
 
         Connection conexao = null;
@@ -181,8 +181,11 @@ public class ProjetoDAO {
 
     }
     
-    //Inserir projeto
-    private static final String SQL_UPDATE_PROJETO = "UPDATE PROJETO SET NOME = ?, DESCRICAO = ?, DATA_INICIO = ?, DATA_TERMINIO = ? ID_DEPARTAMENTO = ? WHERE ID_PROJETO = ?";
+    //Atualizar projeto
+    private static final String SQL_UPDATE_PROJETO = "UPDATE PROJETO SET PROJETO.NOME = ?, "
+            + "PROJETO.DESCRICAO = ?, PROJETO.DATA_INICIO =  ? , PROJETO.DATA_TERMINIO =  ?,"
+            + "PROJETO.ID_DEPARTAMENTO = ? WHERE PROJETO.ID_PROJETO = ?";
+    
     public void atualizarProjeto(Projeto projeto) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
@@ -199,7 +202,39 @@ public class ProjetoDAO {
             comando.setDate(3, (Date) projeto.getDataInicio());
             comando.setDate(4, (Date) projeto.getDataTerminio());
             comando.setInt(5, id_departamento);
-            comando.setInt(5, projeto.getIdProjeto());
+
+            comando.setInt(6, projeto.getIdProjeto());
+
+            comando.executeUpdate();
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+    }
+    
+    //Excluir um projeto
+    private static final String SQL_EXCLUIR_PROJETO = "DELETE FROM PROJETO WHERE ID_PROJETO = ?";
+     public void excluirProjeto(int id_projeto) throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_EXCLUIR_PROJETO);
+
+            comando.setInt(1, id_projeto);
 
             comando.execute();
             conexao.commit();
