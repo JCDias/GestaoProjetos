@@ -7,12 +7,19 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Projeto;
+import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.ProjetoBO;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import org.apache.log4j.Appender;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 /**
  *
@@ -20,14 +27,22 @@ import javax.swing.JOptionPane;
  */
 public class CadastroProjetoForm extends javax.swing.JFrame {
 
-    /**
-     * Creates new form CadastroProjetoForm
-     */
-    public CadastroProjetoForm() {
+    static Logger logger = Logger.getLogger(CadastroUsuarioForm.class);
+    Usuario userLogado = new Usuario();
+
+    public CadastroProjetoForm(Usuario user) {
         initComponents();
+        this.userLogado = user;
         this.setLocationRelativeTo(null);
-        //this.txtDepartamento.setText(userLogado.getDepartamento().getNome());
-        this.txtDepartamento.setText("Administração");
+        this.txtDepartamento.setText(userLogado.getDepartamento().getNome());
+        //Configuração do LOG4J
+        try {
+            BasicConfigurator.configure();
+            Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
+            logger.addAppender(fileAppender);
+        } catch (IOException ex) {
+
+        }
     }
 
     /**
@@ -284,18 +299,12 @@ public class CadastroProjetoForm extends javax.swing.JFrame {
         String dataIValida = txtDataInicio.getText();
         String dataFValida = txtDataTerminio.getText();
         String departamento_projeto = txtDepartamento.getText();
+        Date dataInicio = null, dataTermino = null;
         ProjetoBO projetoBO = new ProjetoBO();
 
         String valida = projetoBO.validaDados(nome, descricao, dataFValida, dataFValida);
 
         if (valida == null) {
-            //Converter data 
-            Date dataInicio = txtDataInicio.getText();
-            Date dataTermino
-            
-                projeto.setDataInicio((java.sql.Date) dataInicio);
-                projeto.setDataTerminio((java.sql.Date) dataTermino);
-            
             //Selecionar objeto de departamento
             Departamento departamento = new Departamento();
             try {
@@ -307,46 +316,44 @@ public class CadastroProjetoForm extends javax.swing.JFrame {
             projeto.setNome(nome);
             projeto.setDescricao(descricao);
             projeto.setDepartamento(departamento);
+            
+            try {
+                    //Converte e seta a data inicio e termino
+                    
+                    dataInicio = formatarData(txtDataInicio.getText());
+                    dataTermino = formatarData(txtDataTerminio.getText());
+                     projeto.setDataInicio((java.sql.Date) dataInicio);
+             projeto.setDataTerminio((java.sql.Date) dataTermino);
+                } catch (Exception ex) {
+                    logger.error("Erro ao converter data "+ex.getMessage());
+                }
+           
+            
+
+            try {
+                String validaProjeto = projetoBO.CadastrarProjeto(projeto);
+                if (validaProjeto == null) {
+                    JOptionPane.showMessageDialog(null, "Projeto cadastrado com sucesso!", "Cadastro Projeto ", JOptionPane.INFORMATION_MESSAGE);
+                    logger.info("Projeto " + nome + " Cadastrado com sucesso!");
+                    int resp = JOptionPane.showConfirmDialog(this, "Deseja cadastrar outro projeto?", "Cadastrar Projeto", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (resp == 0) {
+                        btnLimparActionPerformed(evt);
+                    } else {
+                        ConsultarProjetoForm consProj = new ConsultarProjetoForm(userLogado);
+                        consProj.setVisible(true);
+                        this.dispose();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, validaProjeto, "Cadastro Projeto ", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                logger.error("Erro ao cadastrar projeto " + ex.getMessage());
+            }
         } else {
             JOptionPane.showMessageDialog(null, valida, "Cadastro Projeto ", JOptionPane.INFORMATION_MESSAGE);
         }
 
     }//GEN-LAST:event_btnCadastrarActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroProjetoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroProjetoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroProjetoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroProjetoForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CadastroProjetoForm().setVisible(true);
-            }
-        });
-    }
 
     public static Date formatarData(String dataString) throws Exception {
         if (dataString == null || dataString.equals("")) {
@@ -358,7 +365,7 @@ public class CadastroProjetoForm extends javax.swing.JFrame {
 
         return data;
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrar;
     private javax.swing.JButton btnCancelar;

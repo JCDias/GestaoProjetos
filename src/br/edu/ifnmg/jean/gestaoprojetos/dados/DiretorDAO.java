@@ -86,7 +86,6 @@ public class DiretorDAO {
             if (conexao != null) {
                 conexao.rollback();
             }
-            throw new RuntimeException(e);
 
         } finally {
             if (comando != null && !comando.isClosed()) {
