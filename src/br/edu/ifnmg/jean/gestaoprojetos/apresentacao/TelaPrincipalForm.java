@@ -214,6 +214,11 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         mnuProjetoAtividade.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, java.awt.event.InputEvent.SHIFT_MASK));
         mnuProjetoAtividade.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/desktop.png"))); // NOI18N
         mnuProjetoAtividade.setText("Atividades");
+        mnuProjetoAtividade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuProjetoAtividadeActionPerformed(evt);
+            }
+        });
         mnuProjeto.add(mnuProjetoAtividade);
 
         mnuAtividadesAtraso.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.event.InputEvent.SHIFT_MASK));
@@ -330,6 +335,11 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         ConsultarProjetoForm consProj = new ConsultarProjetoForm(userLogado);
         consProj.setVisible(true);
     }//GEN-LAST:event_mnuProjetoProjetoActionPerformed
+
+    private void mnuProjetoAtividadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuProjetoAtividadeActionPerformed
+       CadatroAtividadeForm cadAtivi = new CadatroAtividadeForm(userLogado);
+       cadAtivi.setVisible(true);
+    }//GEN-LAST:event_mnuProjetoAtividadeActionPerformed
 
     public void cadastrarUsuario(String tipo) {
         Departamento departamentoexiste = new Departamento();

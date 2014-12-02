@@ -11,6 +11,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -252,5 +253,49 @@ public class ProjetoDAO {
                 conexao.close();
             }
         }
+    }
+     
+    //Selecionar projeto por departamento
+     private static final String SQL_SELECT_PROJETOS_POR_DEPARTAMENTO = "SELECT NOME AS PROJETO FROM PROJETO WHERE PROJETO.ID_DEPARTAMENTO = ?";
+    public ArrayList<String> ComboBoxProjeto(String codigo) throws SQLException {
+        ArrayList<String> Projeto = new ArrayList<>();
+                
+        int id_departamento =  selecionarIdDepartamento(codigo);
+        
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_SELECT_PROJETOS_POR_DEPARTAMENTO);
+            comando.setInt(1, id_departamento);
+
+    
+            resultado = comando.executeQuery();
+            Projeto.removeAll(Projeto);
+
+            while (resultado.next()) {
+                Projeto.add(resultado.getString("NOME"));
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+            throw new RuntimeException(e);
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return Projeto;
     }
 }

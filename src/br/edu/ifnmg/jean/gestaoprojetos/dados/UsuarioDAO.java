@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -427,5 +428,44 @@ public class UsuarioDAO {
 
         return resultado;
 
+    }
+    
+    //Preencher combop box encaregado
+    private static final String SQL_SELECT_ENCARREGADO_POR_DEPARTAMENTO = "SELECT  NOME FROM USUARIO WHERE ID_DEPARTAMENTO = ? AND CARGO = 'Encarregado'";
+    public ArrayList<String> ComboBoxEncarregadosPorDepartamento(String codigo) throws SQLException {
+        ArrayList<String> Encaregado = new ArrayList<>();
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        
+        int id_departamento = selecionarIdDepartamento(codigo);
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_SELECT_ENCARREGADO_POR_DEPARTAMENTO);
+            comando.setInt(1, id_departamento);
+
+            resultado = comando.executeQuery();
+            Encaregado.removeAll(Encaregado);
+            while (resultado.next()) {
+                Encaregado.add(resultado.getString("NOME"));
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return Encaregado;
     }
 }

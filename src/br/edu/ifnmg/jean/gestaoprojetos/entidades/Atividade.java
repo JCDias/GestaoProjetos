@@ -10,11 +10,21 @@ package br.edu.ifnmg.jean.gestaoprojetos.entidades;
  * @author JEAN CARLOS
  */
 public class Atividade {
+    
+    private int id_atividade;
     private String nome;
     private Float duracao;
     private Projeto projeto;
     private Usuario encarregado;
 
+    public int getId_atividade() {
+        return id_atividade;
+    }
+
+    public void setId_atividade(int id_atividade) {
+        this.id_atividade = id_atividade;
+    }
+    
     public String getNome() {
         return nome;
     }
