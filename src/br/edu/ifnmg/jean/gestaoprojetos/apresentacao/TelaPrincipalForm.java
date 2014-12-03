@@ -7,7 +7,9 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.negocio.AtividadeBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DepartamentoBO;
+import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.configuraLog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -17,13 +19,15 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import org.apache.log4j.Logger;
 
 /**
  *
- * @author PC
+ * @author JEAN CARLOS
  */
 public class TelaPrincipalForm extends javax.swing.JFrame {
 
+    static Logger logger = null;
     Usuario userLogado = new Usuario();
 
     /**
@@ -31,6 +35,13 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
      */
     public TelaPrincipalForm(Usuario usuarioLogado) {
         initComponents();
+        //Configuração do LOG4J
+        try {
+            Logger log = Logger.getLogger(this.getClass());
+            logger = new configuraLog().configura(log);
+        } catch (IOException ex) {
+
+        }
         this.userLogado = usuarioLogado;
         this.dataHora();
         this.tipoUsuario();
@@ -224,6 +235,11 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         mnuAtividadesAtraso.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, java.awt.event.InputEvent.SHIFT_MASK));
         mnuAtividadesAtraso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/folder_red.png"))); // NOI18N
         mnuAtividadesAtraso.setText("Atividades em Atraso");
+        mnuAtividadesAtraso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuAtividadesAtrasoActionPerformed(evt);
+            }
+        });
         mnuProjeto.add(mnuAtividadesAtraso);
 
         mnuLancarHora.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.SHIFT_MASK));
@@ -351,6 +367,11 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         lancarHora.setVisible(true);
     }//GEN-LAST:event_mnuLancarHoraActionPerformed
 
+    private void mnuAtividadesAtrasoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAtividadesAtrasoActionPerformed
+        ConsultarAtividadesAtrasadas consAA = new ConsultarAtividadesAtrasadas(userLogado);
+        consAA.setVisible(true);;
+    }//GEN-LAST:event_mnuAtividadesAtrasoActionPerformed
+
     public void cadastrarUsuario(String tipo) {
         Departamento departamentoexiste = new Departamento();
 
@@ -403,6 +424,18 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
             this.mnuConsDepartamento.setVisible(false);
             this.mnuConsGerente.setVisible(false);
             this.mnuLancarHora.setVisible(false);
+            AtividadeBO atividadeBO = new AtividadeBO();
+            try {
+                int quantidade = atividadeBO.VerificaAtraso(userLogado.getDepartamento().getCodigo());
+                System.out.println(quantidade);
+                if (quantidade > 0) {
+                    ConsultarAtividadesAtrasadas consAA = new ConsultarAtividadesAtrasadas(userLogado);
+                    consAA.setVisible(true);;
+                }
+            } catch (SQLException ex) {
+                logger.error("Erro ao verificar atividades em atraso " + ex.getMessage());
+            }
+
         } else {
             this.mnuCadastar.setVisible(false);
             this.mnuConsultar.setVisible(false);

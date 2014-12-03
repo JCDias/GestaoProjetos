@@ -17,18 +17,19 @@ import java.util.ArrayList;
  * @author JEAN CARLOS
  */
 public class AtividadeDAO {
-    
+
     //Selecionar atividade por nome
     private static final String SQL_SELECT_ATIVIDADE = "SELECT ID_ATIVIDADE, NOME , DURACAO FROM ATIVIDADE WHERE ATIVIDADE.NOME = ? AND ID_DEPARTAMENTO = ?";
+
     public Atividade SelectATividadePorNome(String NomeAtividade, String codigo) throws SQLException {
 
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
         Atividade atividade = null;
-        
+
         int id_departamento = selecionarIdDepartamento(codigo);
-        
+
         try {
 
             conexao = BancoDadosUtil.getConnection();
@@ -65,10 +66,10 @@ public class AtividadeDAO {
         return atividade;
 
     }
-    
+
     //inserir atividade
     private static final String SQL_INSERT_ATIVIDADE = "INSERT INTO ATIVIDADE (NOME, DURACAO, ID_PROJETO, ID_USUARIO ) VALUES (?,?,?,?)";
-    
+
     public void inserirAtividade(Atividade atividade, int idprojeto) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
@@ -77,7 +78,7 @@ public class AtividadeDAO {
 
             conexao = BancoDadosUtil.getConnection();
             comando = conexao.prepareStatement(SQL_INSERT_ATIVIDADE);
-            
+
             comando.setString(1, atividade.getNome());
             comando.setDouble(2, atividade.getDuracao());
             comando.setInt(3, idprojeto);
@@ -100,7 +101,7 @@ public class AtividadeDAO {
             }
         }
     }
-    
+
     //selecionar o id do departamento
     private static final String SQL_SELECT_ID_DEPARTAMENTO_CODIGO = "SELECT ID_DEPARTAMENTO FROM DEPARTAMENTOS WHERE CODIGO = ?";
 
@@ -141,18 +142,18 @@ public class AtividadeDAO {
         return id_departamento;
 
     }
-    
+
     //preencher a tabela atividades
     private static final String SQL_SELECT_TABELA = "SELECT ATIVIDADE.ID_ATIVIDADE AS Código, ATIVIDADE.NOME AS ATIVIDADE, PROJETO.NOME  AS PROJETO, USUARIO.NOME AS ENCARREGADO, ATIVIDADE.DURACAO AS DURAÇÃO FROM ATIVIDADE JOIN PROJETO ON (ATIVIDADE.ID_PROJETO = PROJETO.ID_PROJETO) JOIN USUARIO ON (ATIVIDADE.ID_USUARIO = USUARIO.ID_USUARIO) WHERE PROJETO.ID_DEPARTAMENTO = ?";
-    
+
     public ResultSet preencherTabelaATividade(String codigo) throws SQLException {
 
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
-        
+
         int id_departamento = selecionarIdDepartamento(codigo);
-        
+
         try {
 
             conexao = BancoDadosUtil.getConnection();
@@ -181,9 +182,10 @@ public class AtividadeDAO {
         return resultado;
 
     }
-    
+
     //Excluir atividade
     private static final String SQL_DELETE_ATIVIDADE = "DELETE FROM ATIVIDADE WHERE ATIVIDADE.ID_ATIVIDADE = ?";
+
     public void excluirAtividade(int id_atividade) throws SQLException {
 
         Connection conexao = null;
@@ -216,9 +218,10 @@ public class AtividadeDAO {
         }
 
     }
-    
+
     //atualizar atividade
     private static final String SQL_UPDATE_ATIVIDADE = "UPDATE ATIVIDADE SET ATIVIDADE.NOME = ?, ATIVIDADE.DURACAO = ?, ATIVIDADE.ID_USUARIO = ? WHERE ATIVIDADE.ID_ATIVIDADE = ?";
+
     public void atualizarAtividade(Atividade atividade) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
@@ -251,12 +254,12 @@ public class AtividadeDAO {
             }
         }
     }
-    
+
     //Preencher combo Box atividades
-    private static final String SQL_TODAS_ATIVIDADE_POR_USUARIO = "SELECT NOME, ID_ATIVIDADE FROM ATIVIDADE WHERE ID_USUARIO = ? ";
-    
+    private static final String SQL_TODAS_ATIVIDADE_POR_USUARIO = "SELECT NOME,ID_ATIVIDADE FROM ATIVIDADE WHERE ID_USUARIO = ? ";
+
     public ArrayList<String> cbAtividades(int id_usuario) throws SQLException {
-        ArrayList<String> Atividade = new ArrayList<>();
+        ArrayList<String> Atividade = new ArrayList<String>();
 
         Connection conexao = null;
         PreparedStatement comando = null;
@@ -292,10 +295,10 @@ public class AtividadeDAO {
         }
         return Atividade;
     }
-    
-    
+
     //lançar horas
-    private static final String SQL_UPDATE_ANDAMENTO_ATIVIDADE  = "UPDATE ATIVIDADE SET ATIVIDADE.CONCLUSAO = ?, ATIVIDADE.HORAS_TRABALHADAS = ? WHERE ATIVIDADE.NOME = ?";
+    private static final String SQL_UPDATE_ANDAMENTO_ATIVIDADE = "UPDATE ATIVIDADE SET ATIVIDADE.CONCLUSAO = ?, ATIVIDADE.HORAS_TRABALHADAS = ? WHERE ATIVIDADE.NOME = ?";
+
     public void andamentoAtividade(Atividade atividade, String atividadeSelecionada) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
@@ -326,4 +329,94 @@ public class AtividadeDAO {
             }
         }
     }
+
+    //Verifica Atraso
+    private static final String SQL_SELECT_COUNT_ATIVIDADE_ATRASO = "SELECT COUNT(ATIVIDADE.NOME) FROM ATIVIDADE JOIN PROJETO ON PROJETO.ID_PROJETO = ATIVIDADE.ID_PROJETO WHERE HORAS_TRABALHADAS > DURACAO AND CONCLUSAO<100  AND PROJETO.ID_DEPARTAMENTO = ?";
+
+    public int VerificaAtraso(String codigo) throws SQLException {
+
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        int quantidade = 0;
+
+        int id_departamento = selecionarIdDepartamento(codigo);
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_COUNT_ATIVIDADE_ATRASO);
+            comando.setInt(1, id_departamento);
+
+            resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                quantidade = resultado.getInt("COUNT(ATIVIDADE.NOME");
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+
+        return quantidade;
+
+    }
+
+    //Preencher tabela
+     private static final String SQL_SELECT_TODAS_ATIVIDADE_ATRASADAS = "SELECT ID_ATIVIDADE AS CÓDIGO ,NOME AS ATIVIDADE ,"
+            + "PROJETO.NOME AS PROJETO,USUARIO.NOME AS ENCARREGADO, DURACAO AS DURAÇÃO, HORAS_TRABALHADAS, CONCLUSAO AS CONCLUSÃO FROM ATIVIDADE "
+            + "JOIN USUARIO ON (USUARIO.ID_USUARIO =  ATIVIDADE.ID_USUARIO)"
+            + "JOIN PROJETO ON (PROJETO.ID_PROJETO =  ATIVIDADE.ID_PROJETO)"
+            + " WHERE HORAS_TRABALHADAS >= DURACAO AND CONCLUSAO < '100' AND USUARIO.ID_DEPARTAMENTO = ?";
+    public ResultSet preencherTabelaAtividadeAtrasadas(String codigo) throws SQLException {
+
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        
+        int id_departamento = selecionarIdDepartamento(codigo); 
+        
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_TODAS_ATIVIDADE_ATRASADAS);
+            comando.setInt(1, id_departamento);
+
+            resultado = comando.executeQuery();
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+            throw new RuntimeException(e);
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+
+        return resultado;
+
+    }
+
 }

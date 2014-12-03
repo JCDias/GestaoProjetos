@@ -105,7 +105,7 @@ public class AtividadeBO {
     public ArrayList<String> ComboBoxAtividades(int id_usuario) throws SQLException {
 
         AtividadeDAO atividadeDAO = new AtividadeDAO();
-        ArrayList<String> Atividades = new ArrayList<>();
+        ArrayList<String> Atividades = new ArrayList<String>();
 
         Atividades = atividadeDAO.cbAtividades(id_usuario);
 
@@ -113,11 +113,39 @@ public class AtividadeBO {
 
     }
     
-    //lençar horas
+    //validaLancar
+    public String validaLancar(String atividade, double horasTrabalhadas, double conclusao){
+        String mensagem = null;
+        
+        if(atividade.equals("Selecione") || horasTrabalhadas == 0 || conclusao == 0){
+            mensagem = "Preencha todos os campos!";
+        }
+        
+        return mensagem;
+    }
+    
+    //lançar horas
     public void LancarHoras(Atividade atividade, String atividadeSelecionada) throws SQLException {
 
         AtividadeDAO atividadeDAO = new AtividadeDAO();
         atividadeDAO.andamentoAtividade(atividade, atividadeSelecionada);
+
+    }
+    
+    //Verifica se existe alguma atividade em atraso
+    public int VerificaAtraso(String cod_departamento) throws SQLException{
+        AtividadeDAO atividadeDAO = new AtividadeDAO();
+        
+        int quantidade = atividadeDAO.VerificaAtraso(cod_departamento);
+        System.out.println("BO"+quantidade);
+        return quantidade;
+    }
+    
+    public ResultSet preencherTabelaAtividadeAtrasadas(String codDepartamento) throws SQLException {
+        AtividadeDAO atividadeDAO = new AtividadeDAO();
+        ResultSet resultPreencherTabela = atividadeDAO.preencherTabelaAtividadeAtrasadas(codDepartamento);
+
+        return resultPreencherTabela;
 
     }
 }

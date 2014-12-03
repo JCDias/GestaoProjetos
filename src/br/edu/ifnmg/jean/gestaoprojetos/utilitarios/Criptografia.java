@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.edu.ifnmg.jean.gestaoprojetos.negocio;
+package br.edu.ifnmg.jean.gestaoprojetos.utilitarios;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

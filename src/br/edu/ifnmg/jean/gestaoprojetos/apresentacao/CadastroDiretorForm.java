@@ -6,7 +6,7 @@
 package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
-import br.edu.ifnmg.jean.gestaoprojetos.negocio.Criptografia;
+import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.Criptografia;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DiretorBO;
 import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.configuraLog;
 import java.io.IOException;

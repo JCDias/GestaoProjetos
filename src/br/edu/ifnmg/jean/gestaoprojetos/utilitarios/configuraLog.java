@@ -23,7 +23,7 @@ public class configuraLog extends BasicConfigurator{
      * @throws IOException
      */
     public Logger configura(Logger logger) throws IOException{
-        Appender fileAppender = new FileAppender(new PatternLayout("%-2d{dd/MM/yy HH:mm} [%t] %5p %c:%L – %m%n"), "LogSGP.log");
+        Appender fileAppender = new FileAppender(new PatternLayout("%-2d{dd/MM/yy HH:mm:SS} [%t] %5p %c:%L – %m%n"), "LogSGP.log");
         logger.addAppender(fileAppender);
         return logger;
     }
