@@ -88,7 +88,9 @@ public class ProjetoBO {
         return Departamentos;
 
     }
+
     //Atualizar projeto
+
     public void atualizarProjeto(Projeto projeto) throws SQLException {
 
         ProjetoDAO projetDAO = new ProjetoDAO();
@@ -96,12 +98,22 @@ public class ProjetoBO {
         projetDAO.atualizarProjeto(projeto);
 
     }
-    
+
     //Excluir Projeto
-    public void excluirProjeto(int id_projeto) throws SQLException{
-        
+    public void excluirProjeto(int id_projeto) throws SQLException {
+
         ProjetoDAO projetoDAO = new ProjetoDAO();
-        
+
         projetoDAO.excluirProjeto(id_projeto);
+    }
+
+    public int selectProjetoPorNome(String NomeProjeto) throws SQLException {
+
+        ProjetoDAO projetDAO = new ProjetoDAO();
+        Projeto projet = new Projeto();
+        int id_projeto = projetDAO.selectProjetoPorNome(NomeProjeto);
+        
+        return id_projeto;
+
     }
 }

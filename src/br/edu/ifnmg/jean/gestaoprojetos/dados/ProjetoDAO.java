@@ -298,4 +298,44 @@ public class ProjetoDAO {
         }
         return Projeto;
     }
+    
+    // selecinar um projeto através do nome
+    private static final String SQL_SELECT_UM_PROJETO = "SELECT ID_PROJETO FROM PROJETO WHERE  PROJETO.NOME = ?";
+    public int selectProjetoPorNome(String Nome_projeto) throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        Projeto projeto = null;
+        int id_projeto = 0;
+        
+        try {
+            
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_UM_PROJETO);
+            comando.setString(1, Nome_projeto);
+            resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                id_projeto = resultado.getInt("ID_PROJETO");
+                
+            }    
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return id_projeto;
+    }
 }

@@ -66,9 +66,60 @@ public class UsuarioDAO {
     }
 
     //Verificar se já existe gerente para o departamento escolhido
-    private static final String SQL_SELECT_GERENTE_POR_DEPARTAMENTO = "SELECT NOME, EMAIL, CARGO FROM USUARIO JOIN DEPARTAMENTOS ON USUARIO.ID_DEPARTAMENTO = DEPARTAMENTOS.ID_DEPARTAMENTO WHERE USUARIO.ID_DEPARTAMENTO = ? AND USUARIO.CARGO = ? AND USUARIO.ID_USUARIO <> ?";
+    private static final String SQL_SELECT_GERENTE_POR_DEPARTAMENTO_ATUALIZAR = "SELECT NOME, EMAIL, CARGO FROM USUARIO JOIN DEPARTAMENTOS ON USUARIO.ID_DEPARTAMENTO = DEPARTAMENTOS.ID_DEPARTAMENTO WHERE USUARIO.ID_DEPARTAMENTO = ? AND USUARIO.CARGO = ? AND USUARIO.ID_USUARIO <> ?";
 
-    public Usuario selecionarGerentePorDepartamento(String CodDepartamento, String cargo, int id_usuario) throws SQLException {
+    public Usuario selecionarGerentePorDepartamentoAtualizar(String CodDepartamento, String cargo, int id_usuario) throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        Usuario user = null;
+
+        int id_departamento = selecionarIdDepartamento(CodDepartamento);
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_GERENTE_POR_DEPARTAMENTO_ATUALIZAR);
+            comando.setInt(1, id_departamento);
+            comando.setString(2, cargo);
+            comando.setInt(3, id_usuario);
+            resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                user = new Usuario();
+                user.setNome(resultado.getString("NOME"));
+                user.setCargo(resultado.getString("CARGO"));
+                user.setSenha(resultado.getString("SENHA"));
+                user.setEmail(resultado.getString("EMAIL"));
+                user.setId_usuario(resultado.getInt("ID_USUARIO"));
+
+                DepartamentoDAO depDAO = new DepartamentoDAO();
+                user.setDepartamento(depDAO.selecionarDepartamentoPorCodigo(resultado.getString("ID_DEPARTAMENTO")));
+
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return user;
+    }
+    
+    //Verificar se já existe gerente para o departamento escolhido
+    private static final String SQL_SELECT_GERENTE_POR_DEPARTAMENTO = "SELECT NOME, EMAIL, CARGO FROM USUARIO JOIN DEPARTAMENTOS ON USUARIO.ID_DEPARTAMENTO = DEPARTAMENTOS.ID_DEPARTAMENTO WHERE USUARIO.ID_DEPARTAMENTO = ? AND USUARIO.CARGO = ?";
+
+    public Usuario selecionarGerentePorDepartamento(String CodDepartamento, String cargo) throws SQLException {
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
@@ -83,7 +134,6 @@ public class UsuarioDAO {
             comando = conexao.prepareStatement(SQL_SELECT_GERENTE_POR_DEPARTAMENTO);
             comando.setInt(1, id_departamento);
             comando.setString(2, cargo);
-            comando.setInt(2, id_usuario);
             resultado = comando.executeQuery();
 
             if (resultado.next()) {
@@ -467,5 +517,53 @@ public class UsuarioDAO {
             }
         }
         return Encaregado;
+    }
+    
+    //selecionar usuario pelo nome e cargo
+    private static final String SQL_SELECT_USUARIO = "SELECT  NOME, CARGO, SENHA, EMAIL, ID_DEPARTAMENTO, ID_USUARIO FROM USUARIO WHERE NOME = ? AND CARGO = ?";
+    public Usuario selecionarUsuario(String Nome, String cargo) throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+        Usuario user = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_USUARIO);
+            comando.setString(1, Nome);
+            comando.setString(2, cargo);
+            resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                user = new Usuario();
+                user.setNome(resultado.getString("NOME"));
+                user.setCargo(resultado.getString("CARGO"));
+                user.setSenha(resultado.getString("SENHA"));
+                user.setEmail(resultado.getString("EMAIL"));
+                user.setId_usuario(resultado.getInt("ID_USUARIO"));
+
+                DepartamentoDAO depDAO = new DepartamentoDAO();
+                user.setDepartamento(depDAO.selecionarDepartamentoPorCodigo(resultado.getString("ID_DEPARTAMENTO")));
+
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return user;
     }
 }

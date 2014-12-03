@@ -75,7 +75,7 @@ public class UsuarioBO {
         //Verificar se já exirte usuario cadastrardo com o mesmo email
         if (GerenteExistente == null) {
 
-            Usuario gerentePorDepartmento = userDAO.selecionarGerentePorDepartamento(Gerente.getDepartamento().getCodigo(), Gerente.getCargo(), Gerente.getId_usuario());
+            Usuario gerentePorDepartmento = userDAO.selecionarGerentePorDepartamento(Gerente.getDepartamento().getCodigo(), Gerente.getCargo());
 
             //Verificar se o departamento selecionado não possui um gerente
             if (gerentePorDepartmento == null) {
@@ -164,7 +164,7 @@ public class UsuarioBO {
 
         if (usuarioExistente == null) {
             System.out.println("id "+user.getId_usuario());
-            Usuario usuarioPorDepartmento = userDAO.selecionarGerentePorDepartamento(user.getDepartamento().getCodigo(), user.getCargo(), user.getId_usuario());
+            Usuario usuarioPorDepartmento = userDAO.selecionarGerentePorDepartamentoAtualizar(user.getDepartamento().getCodigo(), user.getCargo(), user.getId_usuario());
             if (usuarioPorDepartmento == null) {
                 UsuarioDAO usuarioDAO = new UsuarioDAO();
                 usuarioDAO.AtulizaUsuario(user);
@@ -219,6 +219,16 @@ public class UsuarioBO {
         ResultSet resultPreencherTabela = Encarregado.preencherTabelaEncarregado(Departamento);
 
         return resultPreencherTabela;
+
+    }
+    
+    public Usuario SelecionarUsuario(String Nome, String Cargo) throws SQLException {
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        Usuario Encarregado = new Usuario();
+
+        Encarregado = usuarioDAO.selecionarUsuario(Nome, Cargo);
+
+        return Encarregado;
 
     }
 }

@@ -5,6 +5,8 @@
  */
 package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
+import br.edu.ifnmg.jean.gestaoprojetos.entidades.Atividade;
+import br.edu.ifnmg.jean.gestaoprojetos.entidades.Projeto;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.AtividadeBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.ProjetoBO;
@@ -27,9 +29,10 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
 
     static Logger logger = Logger.getLogger(CadastroUsuarioForm.class);
     Usuario userLogado = new Usuario();
-    
+
     public CadatroAtividadeForm(Usuario user) {
         initComponents();
+        this.userLogado = user;
         this.setLocationRelativeTo(null);
         this.configuraComboBoxProjeto();
         this.configuraComboBoxEncarregado();
@@ -155,6 +158,11 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
 
         btnCadastrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/kfloppy.png"))); // NOI18N
         btnCadastrar.setText("Cadastrar");
+        btnCadastrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCadastrarActionPerformed(evt);
+            }
+        });
 
         btnLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/clear-256.png"))); // NOI18N
         btnLimpar.setText("Limpar");
@@ -166,6 +174,11 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
 
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/editdelete.png"))); // NOI18N
         btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -227,12 +240,79 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         txtNome.setText("");
+        SpinnerDuracao.setValue(0);
         this.configuraComboBoxProjeto();
         this.configuraComboBoxEncarregado();
     }//GEN-LAST:event_btnLimparActionPerformed
 
-      
-    
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        ConsultarAtividadeForm consAtividade = new ConsultarAtividadeForm(userLogado);
+        consAtividade.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
+        //Objheto de atividade
+        Atividade atividade = new Atividade();
+
+        //receber parâmetros da tela
+        String nome = txtNome.getText().trim();
+        String projetoSelecionado = ComboBoxProjeto.getSelectedItem().toString();
+        String usuario = ComboBoxEncarregado.getSelectedItem().toString();
+        double duracao = Double.parseDouble(SpinnerDuracao.getValue().toString());
+
+        AtividadeBO atividadeBO = new AtividadeBO();
+        String valida = atividadeBO.validaDados(nome, projetoSelecionado, usuario, duracao);
+        if (valida == null) {
+
+            //selecionar encarregado pelo nome
+            Usuario encarregado = null;
+
+            try {
+                UsuarioBO EncarregadoBO = new UsuarioBO();
+                encarregado = EncarregadoBO.SelecionarUsuario(usuario, "Encarregado");
+            } catch (SQLException ex) {
+                logger.error("Erro ao selecionar encarregado " + ex.getMessage());
+            }
+
+            //selecionar um projeto pelo nome
+            int id_projeto = 0;
+
+            try {
+                ProjetoBO projetoBO = new ProjetoBO();
+                id_projeto = projetoBO.selectProjetoPorNome(projetoSelecionado);
+            } catch (SQLException ex) {
+                logger.error("Erro ao selecionar projeto " + ex.getMessage());
+            }
+
+            //Setando Atividade
+            atividade.setNome(nome);
+            atividade.setDuracao(duracao);
+            atividade.setEncarregado(encarregado);
+
+            try {
+                String validaInserir = atividadeBO.InserirAtividade(atividade, userLogado.getDepartamento().getCodigo(), id_projeto);
+                if (validaInserir == null) {
+                    JOptionPane.showMessageDialog(null, "Atividade cadastrada com sucesso!", "Cadastrar Atividade", JOptionPane.INFORMATION_MESSAGE);
+                    logger.info("Atividade " + nome + " cadastrada com sucesso");
+                    //Verificar se quer cadastrar outra atividade
+                    int resp = JOptionPane.showConfirmDialog(this, "Deseja cadastrar outra Atividade?", "Cadastrar Atividade", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (resp == 0) {
+                        btnLimparActionPerformed(evt);
+                    } else {
+                        ConsultarAtividadeForm consAtividade = new ConsultarAtividadeForm(userLogado);
+                        consAtividade.setVisible(true);
+                        this.dispose();
+                    }
+                }
+            } catch (SQLException ex) {
+                logger.error("Erro ao cadastrar atividade " + ex.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, valida, "Cadastrar Atividade", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnCadastrarActionPerformed
+
     //Preencher combo box projeto
     public void configuraComboBoxProjeto() {
         ArrayList<String> Projetos = new ArrayList<>();
@@ -241,16 +321,17 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
         try {
             Projetos = atividadeBO.ComboBoxProjeto(userLogado.getDepartamento().getCodigo());
         } catch (SQLException ex) {
-            logger.error("Erro ao popular o projetos "+ex.getMessage());
+            logger.error("Erro ao popular o projetos " + ex.getMessage());
         }
 
-        ComboBoxEncarregado.removeAllItems();
-        ComboBoxEncarregado.addItem("Selecione");
+        ComboBoxProjeto.removeAllItems();
+        ComboBoxProjeto.addItem("Selecione");
         for (String item : Projetos) {
-            ComboBoxEncarregado.addItem(item);
+            ComboBoxProjeto.addItem(item);
         }
 
     }
+
     //Preencher combo Box encarregado por departamento
     public void configuraComboBoxEncarregado() {
         ArrayList<String> Encarregado = new ArrayList<>();
@@ -259,8 +340,7 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
         try {
             Encarregado = atividadeBO.ComboBoxEncarregadoPorDepartamento(this.userLogado.getDepartamento().getCodigo());
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao popular os Encarregados",
-                    "Projetos", JOptionPane.ERROR_MESSAGE);
+            logger.error("Erro ao preencher combo box encarregado " + ex.getMessage());
         }
 
         ComboBoxEncarregado.removeAllItems();
@@ -270,7 +350,7 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
         }
 
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox ComboBoxEncarregado;
     private javax.swing.JComboBox ComboBoxProjeto;

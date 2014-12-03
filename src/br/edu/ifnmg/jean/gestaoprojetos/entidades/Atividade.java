@@ -13,9 +13,11 @@ public class Atividade {
     
     private int id_atividade;
     private String nome;
-    private Float duracao;
+    private double duracao;
     private Projeto projeto;
     private Usuario encarregado;
+    private double hora_trabalhadas;
+    private double conclusao;
 
     public int getId_atividade() {
         return id_atividade;
@@ -33,11 +35,11 @@ public class Atividade {
         this.nome = nome;
     }
 
-    public Float getDuracao() {
+    public double getDuracao() {
         return duracao;
     }
 
-    public void setDuracao(Float duracao) {
+    public void setDuracao(double duracao) {
         this.duracao = duracao;
     }
 
@@ -55,6 +57,22 @@ public class Atividade {
 
     public void setEncarregado(Usuario encarregado) {
         this.encarregado = encarregado;
+    }
+
+    public double getHora_trabalhadas() {
+        return hora_trabalhadas;
+    }
+
+    public void setHora_trabalhadas(double hora_trabalhadas) {
+        this.hora_trabalhadas = hora_trabalhadas;
+    }
+
+    public double getConclusao() {
+        return conclusao;
+    }
+
+    public void setConclusao(double conclusao) {
+        this.conclusao = conclusao;
     }
     
 }

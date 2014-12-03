@@ -12,6 +12,7 @@ import br.edu.ifnmg.jean.gestaoprojetos.negocio.ProjetoBO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -44,7 +45,8 @@ public class CadastroProjetoForm extends javax.swing.JFrame {
 
         }
     }
-
+    
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

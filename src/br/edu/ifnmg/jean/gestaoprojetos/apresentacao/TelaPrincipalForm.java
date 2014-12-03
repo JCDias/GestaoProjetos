@@ -337,8 +337,8 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuProjetoProjetoActionPerformed
 
     private void mnuProjetoAtividadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuProjetoAtividadeActionPerformed
-       CadatroAtividadeForm cadAtivi = new CadatroAtividadeForm(userLogado);
-       cadAtivi.setVisible(true);
+       ConsultarAtividadeForm consAtividade = new ConsultarAtividadeForm(userLogado);
+       consAtividade.setVisible(true);
     }//GEN-LAST:event_mnuProjetoAtividadeActionPerformed
 
     public void cadastrarUsuario(String tipo) {
