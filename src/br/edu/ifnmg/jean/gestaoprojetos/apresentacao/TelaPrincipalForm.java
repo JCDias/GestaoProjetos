@@ -229,6 +229,11 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         mnuLancarHora.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.SHIFT_MASK));
         mnuLancarHora.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/karm 2.png"))); // NOI18N
         mnuLancarHora.setText("Lançar Horas");
+        mnuLancarHora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuLancarHoraActionPerformed(evt);
+            }
+        });
         mnuProjeto.add(mnuLancarHora);
 
         jMenuBar1.add(mnuProjeto);
@@ -337,9 +342,14 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
     }//GEN-LAST:event_mnuProjetoProjetoActionPerformed
 
     private void mnuProjetoAtividadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuProjetoAtividadeActionPerformed
-       ConsultarAtividadeForm consAtividade = new ConsultarAtividadeForm(userLogado);
-       consAtividade.setVisible(true);
+        ConsultarAtividadeForm consAtividade = new ConsultarAtividadeForm(userLogado);
+        consAtividade.setVisible(true);
     }//GEN-LAST:event_mnuProjetoAtividadeActionPerformed
+
+    private void mnuLancarHoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuLancarHoraActionPerformed
+        LancarHorasForm lancarHora = new LancarHorasForm(userLogado);
+        lancarHora.setVisible(true);
+    }//GEN-LAST:event_mnuLancarHoraActionPerformed
 
     public void cadastrarUsuario(String tipo) {
         Departamento departamentoexiste = new Departamento();
@@ -393,12 +403,13 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
             this.mnuConsDepartamento.setVisible(false);
             this.mnuConsGerente.setVisible(false);
             this.mnuLancarHora.setVisible(false);
-        }else{
+        } else {
             this.mnuCadastar.setVisible(false);
             this.mnuConsultar.setVisible(false);
             this.mnuProjetoProjeto.setVisible(false);
             this.mnuAtividadesAtraso.setVisible(false);
             this.mnuRelatorios.setVisible(false);
+            this.mnuProjetoAtividade.setVisible(false);
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

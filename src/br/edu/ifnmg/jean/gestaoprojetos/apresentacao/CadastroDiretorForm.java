@@ -8,6 +8,7 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.Criptografia;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DiretorBO;
+import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.configuraLog;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -22,7 +23,7 @@ import org.apache.log4j.PatternLayout;
  * @author PC
  */
 public class CadastroDiretorForm extends javax.swing.JFrame {
-    static Logger logger = Logger.getLogger(CadastroDiretorForm.class);
+    static Logger logger =  null;
     
     /**
      * Creates new form CadastroDiretorForm
@@ -32,9 +33,13 @@ public class CadastroDiretorForm extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         JOptionPane.showMessageDialog(null, "Seja bem vindo ao SGP! \nÉ necessário cadastrar um diretor \nao executar o SGP pela vez.", "Boas Vindas", JOptionPane.INFORMATION_MESSAGE);
         //Configuração do LOG4J
-        BasicConfigurator.configure();
-        Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
-        logger.addAppender(fileAppender);
+        try {
+            Logger log = Logger.getLogger(this.getClass());
+            logger = new configuraLog().configura(log);
+        } catch (IOException ex) {
+
+        }
+
     }
 
     /**

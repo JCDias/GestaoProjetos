@@ -101,4 +101,23 @@ public class AtividadeBO {
         atividadeDAO.atualizarAtividade(atividade);
 
     }
+    
+    public ArrayList<String> ComboBoxAtividades(int id_usuario) throws SQLException {
+
+        AtividadeDAO atividadeDAO = new AtividadeDAO();
+        ArrayList<String> Atividades = new ArrayList<>();
+
+        Atividades = atividadeDAO.cbAtividades(id_usuario);
+
+        return Atividades;
+
+    }
+    
+    //lençar horas
+    public void LancarHoras(Atividade atividade, String atividadeSelecionada) throws SQLException {
+
+        AtividadeDAO atividadeDAO = new AtividadeDAO();
+        atividadeDAO.andamentoAtividade(atividade, atividadeSelecionada);
+
+    }
 }

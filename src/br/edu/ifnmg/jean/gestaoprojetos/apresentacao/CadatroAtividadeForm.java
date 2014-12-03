@@ -11,6 +11,7 @@ import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.AtividadeBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.ProjetoBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.UsuarioBO;
+import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.configuraLog;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import org.apache.log4j.PatternLayout;
  */
 public class CadatroAtividadeForm extends javax.swing.JFrame {
 
-    static Logger logger = Logger.getLogger(CadastroUsuarioForm.class);
+    static Logger logger = null;
     Usuario userLogado = new Usuario();
 
     public CadatroAtividadeForm(Usuario user) {
@@ -38,12 +39,12 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
         this.configuraComboBoxEncarregado();
         //Configuração do LOG4J
         try {
-            BasicConfigurator.configure();
-            Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
-            logger.addAppender(fileAppender);
+            Logger log = Logger.getLogger(this.getClass());
+            logger = new configuraLog().configura(log);
         } catch (IOException ex) {
 
         }
+
     }
 
     /**

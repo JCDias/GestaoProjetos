@@ -24,7 +24,7 @@ import org.apache.log4j.PatternLayout;
 
 /**
  *
- * @author PC
+ * @author JEAN CARLOS
  */
 public class ConsultarEncarregadoForm extends javax.swing.JFrame {
 

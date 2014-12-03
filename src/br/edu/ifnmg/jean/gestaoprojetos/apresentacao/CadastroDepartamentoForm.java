@@ -7,6 +7,7 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DepartamentoBO;
+import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.configuraLog;
 import java.io.IOException;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -21,7 +22,7 @@ import org.apache.log4j.PatternLayout;
  * @author PC
  */
 public class CadastroDepartamentoForm extends javax.swing.JFrame {
-static Logger logger = Logger.getLogger(CadastroDepartamentoForm.class);
+static Logger logger = null;
     /**
      * Creates new form CadastroDepartamentoForm
      */
@@ -29,9 +30,13 @@ static Logger logger = Logger.getLogger(CadastroDepartamentoForm.class);
         initComponents();
         this.setLocationRelativeTo(null);
         //Configuração do LOG4J
-        BasicConfigurator.configure();
-        Appender fileAppender = new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "LogSGP.log");
-        logger.addAppender(fileAppender);
+        try {
+            Logger log = Logger.getLogger(this.getClass());
+            logger = new configuraLog().configura(log);
+        } catch (IOException ex) {
+
+        }
+
     }
 
     /**

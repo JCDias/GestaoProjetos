@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -240,6 +241,81 @@ public class AtividadeDAO {
                 conexao.rollback();
             }
             throw new RuntimeException(e);
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+    }
+    
+    //Preencher combo Box atividades
+    private static final String SQL_TODAS_ATIVIDADE_POR_USUARIO = "SELECT NOME, ID_ATIVIDADE FROM ATIVIDADE WHERE ID_USUARIO = ? ";
+    
+    public ArrayList<String> cbAtividades(int id_usuario) throws SQLException {
+        ArrayList<String> Atividade = new ArrayList<>();
+
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_TODAS_ATIVIDADE_POR_USUARIO);
+            comando.setInt(1, id_usuario);
+
+            resultado = comando.executeQuery();
+            Atividade.removeAll(Atividade);
+
+            while (resultado.next()) {
+                Atividade.add(resultado.getString("NOME"));
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return Atividade;
+    }
+    
+    
+    //lançar horas
+    private static final String SQL_UPDATE_ANDAMENTO_ATIVIDADE  = "UPDATE ATIVIDADE SET ATIVIDADE.CONCLUSAO = ?, ATIVIDADE.HORAS_TRABALHADAS = ? WHERE ATIVIDADE.NOME = ?";
+    public void andamentoAtividade(Atividade atividade, String atividadeSelecionada) throws SQLException {
+        Connection conexao = null;
+        PreparedStatement comando = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+            comando = conexao.prepareStatement(SQL_UPDATE_ANDAMENTO_ATIVIDADE);
+
+            comando.setDouble(1, atividade.getConclusao());
+            comando.setDouble(2, atividade.getHora_trabalhadas());
+            comando.setString(3, atividadeSelecionada);
+
+            comando.execute();
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
 
         } finally {
             if (comando != null && !comando.isClosed()) {
