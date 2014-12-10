@@ -62,6 +62,11 @@ public class LancarHorasForm extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Selecione uma atividade", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 0, 14))); // NOI18N
 
         ComboBoxAtividades.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ComboBoxAtividades.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                ComboBoxAtividadesFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -208,6 +213,22 @@ public class LancarHorasForm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, valida, "Lançar horas", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnLancarActionPerformed
+
+    private void ComboBoxAtividadesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ComboBoxAtividadesFocusLost
+        if (!ComboBoxAtividades.getSelectedItem().equals("Selecione")) {
+            AtividadeBO atividadeBO = new AtividadeBO();
+            Atividade atividade = new Atividade();
+            try {
+                atividade = atividadeBO.HorasConclusao(ComboBoxAtividades.getSelectedItem().toString());
+                
+                txtConclusao.setValue(atividade.getConclusao());
+                txtHoras.setValue(atividade.getHora_trabalhadas());
+                
+            } catch (SQLException ex) {
+                logger.error("Erro ao setar o conclusão atividade " + ex.getMessage());
+            }
+        }
+    }//GEN-LAST:event_ComboBoxAtividadesFocusLost
 
     public void preencherComboBoxAtividade() {
         ArrayList<String> Atividade = new ArrayList<String>();

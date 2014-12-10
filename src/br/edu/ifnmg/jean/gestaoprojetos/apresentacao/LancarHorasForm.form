@@ -152,6 +152,9 @@
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="ComboBoxAtividadesFocusLost"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

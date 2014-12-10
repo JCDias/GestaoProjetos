@@ -330,65 +330,22 @@ public class AtividadeDAO {
         }
     }
 
-    //Verifica Atraso
-    private static final String SQL_SELECT_COUNT_ATIVIDADE_ATRASO = "SELECT COUNT(ATIVIDADE.NOME) FROM ATIVIDADE JOIN PROJETO ON PROJETO.ID_PROJETO = ATIVIDADE.ID_PROJETO WHERE HORAS_TRABALHADAS > DURACAO AND CONCLUSAO<100  AND PROJETO.ID_DEPARTAMENTO = ?";
-
-    public int VerificaAtraso(String codigo) throws SQLException {
-
-        Connection conexao = null;
-        PreparedStatement comando = null;
-        ResultSet resultado = null;
-        int quantidade = 0;
-
-        int id_departamento = selecionarIdDepartamento(codigo);
-
-        try {
-
-            conexao = BancoDadosUtil.getConnection();
-
-            comando = conexao.prepareStatement(SQL_SELECT_COUNT_ATIVIDADE_ATRASO);
-            comando.setInt(1, id_departamento);
-
-            resultado = comando.executeQuery();
-
-            if (resultado.next()) {
-                quantidade = resultado.getInt("COUNT(ATIVIDADE.NOME");
-            }
-
-            conexao.commit();
-
-        } catch (Exception e) {
-            if (conexao != null) {
-                conexao.rollback();
-            }
-
-        } finally {
-            if (comando != null && !comando.isClosed()) {
-                comando.close();
-            }
-            if (conexao != null && !conexao.isClosed()) {
-                conexao.close();
-            }
-        }
-
-        return quantidade;
-
-    }
-
+    
     //Preencher tabela
-     private static final String SQL_SELECT_TODAS_ATIVIDADE_ATRASADAS = "SELECT ID_ATIVIDADE AS CÓDIGO ,NOME AS ATIVIDADE ,"
+    private static final String SQL_SELECT_TODAS_ATIVIDADE_ATRASADAS = "SELECT ID_ATIVIDADE AS CÓDIGO ,NOME AS ATIVIDADE ,"
             + "PROJETO.NOME AS PROJETO,USUARIO.NOME AS ENCARREGADO, DURACAO AS DURAÇÃO, HORAS_TRABALHADAS, CONCLUSAO AS CONCLUSÃO FROM ATIVIDADE "
             + "JOIN USUARIO ON (USUARIO.ID_USUARIO =  ATIVIDADE.ID_USUARIO)"
             + "JOIN PROJETO ON (PROJETO.ID_PROJETO =  ATIVIDADE.ID_PROJETO)"
             + " WHERE HORAS_TRABALHADAS >= DURACAO AND CONCLUSAO < '100' AND USUARIO.ID_DEPARTAMENTO = ?";
+
     public ResultSet preencherTabelaAtividadeAtrasadas(String codigo) throws SQLException {
 
         Connection conexao = null;
         PreparedStatement comando = null;
         ResultSet resultado = null;
-        
-        int id_departamento = selecionarIdDepartamento(codigo); 
-        
+
+        int id_departamento = selecionarIdDepartamento(codigo);
+
         try {
 
             conexao = BancoDadosUtil.getConnection();
@@ -419,4 +376,49 @@ public class AtividadeDAO {
 
     }
 
+    //Selecionar horas e conclusao
+    private static final String SQL_SELECT_HORAS_CONCLUSAO = "SELECT ID_ATIVIDADE, CONCLUSAO, HORAS_TRABALHADAS FROM ATIVIDADE WHERE NOME = ?";
+
+    public Atividade HorasConclusao(String nomeAtividade) throws SQLException {
+        Atividade atividade = null;
+
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_HORAS_CONCLUSAO);
+
+            comando.setString(1, nomeAtividade);
+
+            resultado = comando.executeQuery();
+
+            if (resultado.next()) {
+                atividade = new Atividade();
+                atividade.setId_atividade(resultado.getInt("ID_ATIVIDADE"));
+                atividade.setConclusao(resultado.getDouble("CONCLUSAO"));
+                atividade.setHora_trabalhadas(resultado.getDouble("HORAS_TRABALHADAS"));
+                
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return atividade;
+
+    }
 }

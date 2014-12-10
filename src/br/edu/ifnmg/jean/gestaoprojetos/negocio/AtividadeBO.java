@@ -9,6 +9,8 @@ import br.edu.ifnmg.jean.gestaoprojetos.dados.AtividadeDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.dados.ProjetoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.dados.UsuarioDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Atividade;
+import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import java.util.ArrayList;
 public class AtividadeBO {
 
     //Valida campos
-    public String validaDados(String nome, String projeto, String encarregado, double duracao) {
+    public String validaDados(String nome, String projeto, String encarregado, double duracao) throws CamposVaziosException{
         String mensagem = null;
 
         if (nome.length() < 3) {
@@ -32,7 +34,7 @@ public class AtividadeBO {
         }
 
         if (nome.isEmpty() || projeto.equals("Selecione") || encarregado.equals("Selecione")) {
-            mensagem = "Preencha todos os campos!";
+            throw new CamposVaziosException();
         }
         return mensagem;
     }
@@ -133,19 +135,30 @@ public class AtividadeBO {
     }
     
     //Verifica se existe alguma atividade em atraso
-    public int VerificaAtraso(String cod_departamento) throws SQLException{
+    /*public int VerificaAtraso(String cod_departamento) throws SQLException{
         AtividadeDAO atividadeDAO = new AtividadeDAO();
         
         int quantidade = atividadeDAO.VerificaAtraso(cod_departamento);
         System.out.println("BO"+quantidade);
         return quantidade;
     }
-    
+    */
     public ResultSet preencherTabelaAtividadeAtrasadas(String codDepartamento) throws SQLException {
         AtividadeDAO atividadeDAO = new AtividadeDAO();
         ResultSet resultPreencherTabela = atividadeDAO.preencherTabelaAtividadeAtrasadas(codDepartamento);
 
         return resultPreencherTabela;
 
+    }
+    
+    //Selecionar horas e porcentagem da atividade por nome
+    public Atividade HorasConclusao(String departamento) throws SQLException{
+        Atividade atividade = new Atividade();
+        
+        AtividadeDAO atividadeDAO = new AtividadeDAO();
+        
+        atividade = atividadeDAO.HorasConclusao(departamento);
+        
+        return atividade;
     }
 }

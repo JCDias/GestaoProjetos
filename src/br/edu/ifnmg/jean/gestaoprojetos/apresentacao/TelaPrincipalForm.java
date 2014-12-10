@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import javax.swing.table.TableModel;
+import net.proteanit.sql.DbUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -424,18 +426,6 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
             this.mnuConsDepartamento.setVisible(false);
             this.mnuConsGerente.setVisible(false);
             this.mnuLancarHora.setVisible(false);
-            AtividadeBO atividadeBO = new AtividadeBO();
-            try {
-                int quantidade = atividadeBO.VerificaAtraso(userLogado.getDepartamento().getCodigo());
-                System.out.println(quantidade);
-                if (quantidade > 0) {
-                    ConsultarAtividadesAtrasadas consAA = new ConsultarAtividadesAtrasadas(userLogado);
-                    consAA.setVisible(true);;
-                }
-            } catch (SQLException ex) {
-                logger.error("Erro ao verificar atividades em atraso " + ex.getMessage());
-            }
-
         } else {
             this.mnuCadastar.setVisible(false);
             this.mnuConsultar.setVisible(false);
