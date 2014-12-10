@@ -10,7 +10,10 @@ import br.edu.ifnmg.jean.gestaoprojetos.dados.ProjetoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.dados.UsuarioDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Atividade;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.AtividadeExistenteException;
 import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DadoInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.NomeInvalidoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,21 +25,20 @@ import java.util.ArrayList;
 public class AtividadeBO {
 
     //Valida campos
-    public String validaDados(String nome, String projeto, String encarregado, double duracao) throws CamposVaziosException{
-        String mensagem = null;
-
+    public void validaDados(String nome, String projeto, String encarregado, double duracao){
+        
         if (nome.length() < 3) {
-            mensagem = "Nome muito curto! O nome deve conter no mínimo 3 caracteres.";
+            throw new NomeInvalidoException();
         }
 
         if (duracao == 0) {
-            mensagem = "Duração deve ser maior que 0";
+            throw new DadoInvalidoException();
         }
 
         if (nome.isEmpty() || projeto.equals("Selecione") || encarregado.equals("Selecione")) {
             throw new CamposVaziosException();
         }
-        return mensagem;
+        
     }
 
     //Preencher combo box departamento
@@ -63,8 +65,8 @@ public class AtividadeBO {
 
     }
 
-    public String InserirAtividade(Atividade atividade, String nome_departamento, int idprojeto) throws SQLException {
-        String mensagem = null;
+    public void InserirAtividade(Atividade atividade, String nome_departamento, int idprojeto) throws SQLException {
+        
         AtividadeDAO atividadeDAO = new AtividadeDAO();
 
         Atividade atividadeExistente = null;
@@ -73,9 +75,9 @@ public class AtividadeBO {
         if (atividadeExistente == null) {
             atividadeDAO.inserirAtividade(atividade, idprojeto);
         } else {
-            mensagem = "Já existe uma atividade com este nome cadastrada!";
+            throw new AtividadeExistenteException();
         }
-        return mensagem;
+        
     }
 
     //Preencher tabela atividade

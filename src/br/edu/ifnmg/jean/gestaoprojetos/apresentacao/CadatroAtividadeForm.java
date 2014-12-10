@@ -8,6 +8,10 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Atividade;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Projeto;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.AtividadeExistenteException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DadoInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.NomeInvalidoException;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.AtividadeBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.ProjetoBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.UsuarioBO;
@@ -263,8 +267,8 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
         double duracao = Double.parseDouble(SpinnerDuracao.getValue().toString());
 
         AtividadeBO atividadeBO = new AtividadeBO();
-        String valida = atividadeBO.validaDados(nome, projetoSelecionado, usuario, duracao);
-        if (valida == null) {
+        try{
+        atividadeBO.validaDados(nome, projetoSelecionado, usuario, duracao);
 
             //selecionar encarregado pelo nome
             Usuario encarregado = null;
@@ -292,8 +296,8 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
             atividade.setEncarregado(encarregado);
 
             try {
-                String validaInserir = atividadeBO.InserirAtividade(atividade, userLogado.getDepartamento().getCodigo(), id_projeto);
-                if (validaInserir == null) {
+                try  {
+                    atividadeBO.InserirAtividade(atividade, userLogado.getDepartamento().getCodigo(), id_projeto);
                     JOptionPane.showMessageDialog(null, "Atividade cadastrada com sucesso!", "Cadastrar Atividade", JOptionPane.INFORMATION_MESSAGE);
                     logger.info("Atividade " + nome + " cadastrada com sucesso");
                     //Verificar se quer cadastrar outra atividade
@@ -305,12 +309,19 @@ public class CadatroAtividadeForm extends javax.swing.JFrame {
                         consAtividade.setVisible(true);
                         this.dispose();
                     }
+                }catch(AtividadeExistenteException ex){
+                    JOptionPane.showMessageDialog(null, "Já existe uma atividade com este nome cadastrada!", "Cadastrar Atividade", JOptionPane.INFORMATION_MESSAGE);
                 }
+                
             } catch (SQLException ex) {
                 logger.error("Erro ao cadastrar atividade " + ex.getMessage());
             }
-        } else {
-            JOptionPane.showMessageDialog(null, valida, "Cadastrar Atividade", JOptionPane.INFORMATION_MESSAGE);
+        }catch(CamposVaziosException ex){
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos", "Cadastrar Atividade", JOptionPane.INFORMATION_MESSAGE);
+        }catch(DadoInvalidoException ex){
+            JOptionPane.showMessageDialog(null, "A duração deve ser maior que zero.", "Cadastrar Atividade", JOptionPane.INFORMATION_MESSAGE);
+        }catch(NomeInvalidoException ex){
+            JOptionPane.showMessageDialog(null, "Nome muito curto o nome deve conter no minimo 3 caracteres", "Cadastrar Atividade", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnCadastrarActionPerformed
 

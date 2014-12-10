@@ -8,6 +8,11 @@ package br.edu.ifnmg.jean.gestaoprojetos.negocio;
 import br.edu.ifnmg.jean.gestaoprojetos.dados.UsuarioDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DadoInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DepertamentoInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.EmailInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.NomeInvalidoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
@@ -19,30 +24,27 @@ import java.util.regex.Pattern;
  */
 public class UsuarioBO {
 
-    public String validaDados(String nome, String email, String senha, String connfirmaSenha, String departamento) {
-        String mensagem = null;
-
+    public void validaDados(String nome, String email, String senha, String connfirmaSenha, String departamento) {
+       
         if (departamento.equals("Selecione")) {
-            mensagem = "Selecione um departamento!";
+            throw new DepertamentoInvalidoException();
         }
 
         if (validaSenha(senha, connfirmaSenha) == false) {
-            mensagem = "As senhas digitadas não conferem!!";
+            throw new DadoInvalidoException();
         }
 
         if (validaEmail(email) == false) {
-            mensagem = "E-mail inválido";
+            throw new EmailInvalidoException();
         }
 
         if (nome.length() < 3) {
-            mensagem = "Nome muito curto";
+            throw new NomeInvalidoException();
         }
 
         if (nome.isEmpty() || email.isEmpty() || senha.isEmpty() || connfirmaSenha.isEmpty() || departamento.equals("Selecione")) {
-            mensagem = "Prrencha todos os campos!";
+            throw new CamposVaziosException();
         }
-
-        return mensagem;
     }
 
     //Validar se as senhas digitadas são iguais

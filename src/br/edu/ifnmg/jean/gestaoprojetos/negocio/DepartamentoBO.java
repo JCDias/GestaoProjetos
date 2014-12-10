@@ -7,6 +7,8 @@ package br.edu.ifnmg.jean.gestaoprojetos.negocio;
 
 import br.edu.ifnmg.jean.gestaoprojetos.dados.DepartamentoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DadoInvalidoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,18 +19,15 @@ import java.util.ArrayList;
  */
 public class DepartamentoBO {
     
-    public String validaDados(String codigo, String nome){
-        String mensagem = null;
+    public void validaDados(String codigo, String nome){
         
         if(codigo.length()!=3){
-            mensagem = "O código do departamento deve conter 3 caracteres!";
+            throw new DadoInvalidoException();
         }
         
         if(codigo.isEmpty() || nome.isEmpty()){
-            mensagem = "preencha todos os campos!";
+            throw new CamposVaziosException();
         }
-        
-        return mensagem;
     }
     
     public Departamento VerificarDepartamento(Departamento DEP) throws SQLException {

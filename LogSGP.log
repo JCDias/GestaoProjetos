@@ -25,3 +25,5 @@
 10/12/14 16:04:648 [AWT-EventQueue-0]  INFO br.edu.ifnmg.jean.gestaoprojetos.apresentacao.LancarHorasForm:205 – Lançamento realizado com sucesso
 10/12/14 16:09:959 [AWT-EventQueue-0]  INFO br.edu.ifnmg.jean.gestaoprojetos.apresentacao.LancarHorasForm:205 – Lançamento realizado com sucesso
 10/12/14 16:19:706 [AWT-EventQueue-0]  INFO br.edu.ifnmg.jean.gestaoprojetos.apresentacao.LancarHorasForm:205 – Lançamento realizado com sucesso
+10/12/14 17:56:820 [AWT-EventQueue-0]  INFO br.edu.ifnmg.jean.gestaoprojetos.apresentacao.CadastroDepartamentoForm:211 – Departamento criado com sucesso
+10/12/14 17:56:566 [AWT-EventQueue-0]  INFO br.edu.ifnmg.jean.gestaoprojetos.apresentacao.CadastroUsuarioForm:350 – Gerente criado com sucesso. nome: cfnhfgjh

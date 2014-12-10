@@ -6,6 +6,10 @@
 package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DadoInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.EmailInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.NomeInvalidoException;
 import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.Criptografia;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DiretorBO;
 import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.configuraLog;
@@ -247,9 +251,8 @@ public class CadastroDiretorForm extends javax.swing.JFrame {
         
         DiretorBO diretorBO = new DiretorBO();
         
-        String valida = diretorBO.validaDados(nome,email,senha,confirmaSenha);
-        
-        if(valida == null){
+        try{
+            diretorBO.validaDados(nome,email,senha,confirmaSenha);
             //Realizando a criptografia da senha
             Criptografia criptografia = new Criptografia();
             String senhaCriptografada = criptografia.criptografar(senha);
@@ -269,8 +272,14 @@ public class CadastroDiretorForm extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 logger.error("Erro ao cadastrar diretor "+ex.getMessage());
             }
-        }else{
-            JOptionPane.showMessageDialog(null, valida, "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);
+        }catch(CamposVaziosException ex){
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos!", "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);
+        }catch(NomeInvalidoException ex){
+            JOptionPane.showMessageDialog(null, "O nome deve conter no mínimo 3 caracteres!", "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);
+        }catch(EmailInvalidoException ex){
+            JOptionPane.showMessageDialog(null, "Email inválido!", "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);
+        }catch(DadoInvalidoException ex){
+            JOptionPane.showMessageDialog(null, "As senhas não conferem!", "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_btnCadastrarActionPerformed
 

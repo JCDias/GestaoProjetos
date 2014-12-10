@@ -6,6 +6,8 @@
 package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DadoInvalidoException;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DepartamentoBO;
 import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.configuraLog;
 import java.io.IOException;
@@ -192,14 +194,15 @@ static Logger logger = null;
         System.out.println(codigo);
         //Validar campos
         DepartamentoBO departamentoBO = new DepartamentoBO();
-        String valida = departamentoBO.validaDados(codigo, nomeDepartamento);
+        
         
         //Departamento
         Departamento departamento = new Departamento();
         departamento.setCodigo(codigo);
         departamento.setNome(nomeDepartamento);
         
-        if(valida == null){
+        try{
+            departamentoBO.validaDados(codigo, nomeDepartamento);
             try {
                 departamentoexistente = departamentoBO.VerificarDepartamento(departamento);
                 if(departamentoexistente==null){
@@ -213,8 +216,10 @@ static Logger logger = null;
             } catch (SQLException ex) {
                 logger.error("Erro cadastrar departamento "+ex.getMessage());
             }
-        }else{
-            JOptionPane.showMessageDialog(null, valida, "ERRO", JOptionPane.ERROR_MESSAGE);
+        }catch(CamposVaziosException ex){
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos!", "ERRO", JOptionPane.ERROR_MESSAGE);
+        }catch(DadoInvalidoException ex){
+            JOptionPane.showMessageDialog(null, "O código do departamento deve conter 3 caracteres!!", "ERRO", JOptionPane.ERROR_MESSAGE);
         }
         
     }//GEN-LAST:event_btnCadastrarActionPerformed

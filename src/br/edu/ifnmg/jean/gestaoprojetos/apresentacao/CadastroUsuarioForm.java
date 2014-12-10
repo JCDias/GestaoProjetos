@@ -7,6 +7,11 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DadoInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DepertamentoInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.EmailInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.NomeInvalidoException;
 import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.Criptografia;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DepartamentoBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.UsuarioBO;
@@ -313,9 +318,9 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
         String cargo = this.tipo;
 
         UsuarioBO usuarioBO = new UsuarioBO();
-        String valida = usuarioBO.validaDados(nome, email, senha, confirmaSenha, departamentoSelecionado);
+        try {
+            usuarioBO.validaDados(nome, email, senha, confirmaSenha, departamentoSelecionado);
 
-        if (valida == null) {
             Departamento departamento = new Departamento();
             DepartamentoBO departamentoBO = new DepartamentoBO();
 
@@ -335,7 +340,7 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
             usuario.setCargo(cargo);
             usuario.setSenha(senhaCriptografada);
             usuario.setDepartamento(departamento);
-            
+
             //Cadastrar Gerente
             if (this.tipo.equals("Gerente")) {
                 try {
@@ -350,12 +355,12 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
                 } catch (SQLException ex) {
                     logger.error("Erro ao inserir gerente " + ex.getMessage());
                 }
-            } 
-            
+            }
+
             //Cadastrar Encarregado
             if (this.tipo.equals("Encarregado")) {
                 try {
-                    String validaEncarregado = usuarioBO.validaEncarregado(usuario,userLogado);
+                    String validaEncarregado = usuarioBO.validaEncarregado(usuario, userLogado);
                     if (validaEncarregado == null) {
                         JOptionPane.showMessageDialog(this, "Encarregado cadastrado com sucesso!", "Cadastro de Encarregado", JOptionPane.INFORMATION_MESSAGE);
                         logger.info("Gerente criado com sucesso. nome: " + nome);
@@ -368,8 +373,16 @@ public class CadastroUsuarioForm extends javax.swing.JFrame {
                 }
             }
 
-        } else {
-            JOptionPane.showMessageDialog(this, valida, "Cadastro de Usuário", JOptionPane.INFORMATION_MESSAGE);
+        } catch (CamposVaziosException ex) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos!", "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);
+        } catch (NomeInvalidoException ex) {
+            JOptionPane.showMessageDialog(null, "O nome deve conter no mínimo 3 caracteres!", "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);
+        } catch (EmailInvalidoException ex) {
+            JOptionPane.showMessageDialog(null, "Email inválido!", "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);
+        } catch (DadoInvalidoException ex) {
+            JOptionPane.showMessageDialog(null, "As senhas não conferem!", "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);
+        } catch (DepertamentoInvalidoException ex) {
+            JOptionPane.showMessageDialog(null, "Selecione um departamento!", "Cadastro de Diretor", JOptionPane.WARNING_MESSAGE);
         }
 
     }//GEN-LAST:event_btnCadastrarActionPerformed
