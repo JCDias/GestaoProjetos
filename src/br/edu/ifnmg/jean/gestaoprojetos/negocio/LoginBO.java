@@ -7,6 +7,8 @@ package br.edu.ifnmg.jean.gestaoprojetos.negocio;
 
 import br.edu.ifnmg.jean.gestaoprojetos.dados.LoginDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.EmailInvalidoException;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,18 +19,15 @@ import java.util.regex.Pattern;
  */
 public class LoginBO {
 
-    public String validaDados(String email, String senha){
-        String mensagem = null;
-        
+    public void validaDados(String email, String senha){
+                
         if(validaEmail(email)==false){
-            mensagem = "E-mail inválido!";
+            throw new EmailInvalidoException();
         }
         
         if(email.isEmpty() || senha.isEmpty()){
-            mensagem = "Preencha todos os campos!";
+           throw new CamposVaziosException();
         }
-        
-        return mensagem;
     }
     
     public boolean validaEmail(String email) {

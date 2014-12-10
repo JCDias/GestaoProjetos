@@ -8,6 +8,10 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Projeto;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DataInvalidaException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.NomeInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.ProjetoInvalidoException;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.ProjetoBO;
 import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.configuraLog;
 import java.io.IOException;
@@ -306,10 +310,9 @@ public class CadastroProjetoForm extends javax.swing.JFrame {
         String departamento_projeto = txtDepartamento.getText();
         Date dataInicio = null, dataTermino = null;
         ProjetoBO projetoBO = new ProjetoBO();
-
-        String valida = projetoBO.validaDados(nome, descricao, dataFValida, dataFValida);
-
-        if (valida == null) {
+        
+        try {
+            projetoBO.validaDados(nome, descricao, dataFValida, dataFValida);
             //Selecionar objeto de departamento
             Departamento departamento = new Departamento();
             try {
@@ -336,8 +339,9 @@ public class CadastroProjetoForm extends javax.swing.JFrame {
             
 
             try {
-                String validaProjeto = projetoBO.CadastrarProjeto(projeto);
-                if (validaProjeto == null) {
+                
+                try {
+                    projetoBO.CadastrarProjeto(projeto);
                     JOptionPane.showMessageDialog(null, "Projeto cadastrado com sucesso!", "Cadastro Projeto ", JOptionPane.INFORMATION_MESSAGE);
                     logger.info("Projeto " + nome + " Cadastrado com sucesso!");
                     int resp = JOptionPane.showConfirmDialog(this, "Deseja cadastrar outro projeto?", "Cadastrar Projeto", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -348,14 +352,18 @@ public class CadastroProjetoForm extends javax.swing.JFrame {
                         consProj.setVisible(true);
                         this.dispose();
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, validaProjeto, "Cadastro Projeto ", JOptionPane.INFORMATION_MESSAGE);
+                } catch(ProjetoInvalidoException ex) {
+                    JOptionPane.showMessageDialog(null, "Já existe um projeto cadastrado neste departamento com o mesmo nome!\\n Por favor escolha outro nome.", "Cadastro Projeto ", JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (SQLException ex) {
                 logger.error("Erro ao cadastrar projeto " + ex.getMessage());
             }
-        } else {
-            JOptionPane.showMessageDialog(null, valida, "Cadastro Projeto ", JOptionPane.INFORMATION_MESSAGE);
+        }catch(CamposVaziosException ex){
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos!", "Cadastro Projeto ", JOptionPane.INFORMATION_MESSAGE);
+        }catch(DataInvalidaException ex){
+            JOptionPane.showMessageDialog(null, "Data Inválida!", "Cadastro Projeto ", JOptionPane.INFORMATION_MESSAGE);
+        }catch(NomeInvalidoException ex){
+            JOptionPane.showMessageDialog(null, "O nome deve conter no minimo 3 caracteres!", "Cadastro Projeto ", JOptionPane.INFORMATION_MESSAGE);
         }
 
     }//GEN-LAST:event_btnCadastrarActionPerformed

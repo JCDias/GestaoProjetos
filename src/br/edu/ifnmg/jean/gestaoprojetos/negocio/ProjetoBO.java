@@ -9,6 +9,10 @@ import br.edu.ifnmg.jean.gestaoprojetos.dados.DepartamentoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.dados.ProjetoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Projeto;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DataInvalidaException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.NomeInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.ProjetoInvalidoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,32 +23,28 @@ import java.util.ArrayList;
  */
 public class ProjetoBO {
 
-    public String validaDados(String nome, String descricao, String data_inicio, String data_terminio) {
-        String mensagem = null;
-
+    public void validaDados(String nome, String descricao, String data_inicio, String data_terminio) {
+        
         if (nome.length() < 3) {
-            mensagem = "Nome muito curto! O nome deve conter mais de 3 caracteres.";
+            throw new NomeInvalidoException();
         }
 
         if (data_inicio.length() < 10) {
-            mensagem = "Formato data de início inválido\nPadrão adotado DD/MM/AAAA";
+            throw new DataInvalidaException();
         }
 
         if (data_terminio.length() < 10) {
-            mensagem = "Formato data terminio inválido\nPadrão adotado DD/MM/AAAA";
+            throw new DataInvalidaException();
         }
 
         if (nome.isEmpty() || descricao.isEmpty() || (data_inicio.length() == 2) || (data_terminio.length() == 2)) {
-            mensagem = "Preencha todos os campos!";
+            throw new CamposVaziosException();
         }
-
-        return mensagem;
     }
 
     //Criar novo projeto
-    public String CadastrarProjeto(Projeto projeto) throws SQLException {
-
-        String mensagem = null;
+    public void CadastrarProjeto(Projeto projeto) throws SQLException {
+        
         ProjetoDAO projetDAO = new ProjetoDAO();
         //Verifica se existe um projeto com o mesmo nome no departamento
         Projeto projetoExistente = new Projeto();
@@ -52,9 +52,8 @@ public class ProjetoBO {
         if (projetoExistente == null) {
             projetDAO.cadastrarProjeto(projeto);
         } else {
-            mensagem = "Já existe um projeto cadastrado nesteb departamento com o mesmo nome!\n Por favor escolha outro nome.";
+            throw new ProjetoInvalidoException();
         }
-        return mensagem;
     }
 
     //Selecionar departamento por nome

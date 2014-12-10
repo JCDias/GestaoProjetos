@@ -7,6 +7,8 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 
 import static br.edu.ifnmg.jean.gestaoprojetos.apresentacao.CadastroDiretorForm.logger;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.EmailInvalidoException;
 import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.Criptografia;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DiretorBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.LoginBO;
@@ -182,10 +184,10 @@ public class LoginForm extends javax.swing.JFrame {
 
         //Chamar validação dos campos
         LoginBO loginBO = new LoginBO();
-        String valida = loginBO.validaDados(email, senha);
+       
 
-        if (valida == null) {
-
+        try{
+            loginBO.validaDados(email, senha);
             Criptografia criptografia = new Criptografia();
             String senhaCriptografada = criptografia.criptografar(senha);
 
@@ -202,8 +204,10 @@ public class LoginForm extends javax.swing.JFrame {
                 logger.error("Erro ao validar login " + ex.getMessage());
             }
 
-        } else {
-            JOptionPane.showMessageDialog(null, valida, "ERRO", JOptionPane.ERROR_MESSAGE);
+        } catch(CamposVaziosException ex) {
+            JOptionPane.showMessageDialog(null, "Preencha todos os campos", "ERRO", JOptionPane.ERROR_MESSAGE);
+        }catch(EmailInvalidoException ex){
+            JOptionPane.showMessageDialog(null, "Email inválido", "ERRO", JOptionPane.ERROR_MESSAGE);
         }
 
 

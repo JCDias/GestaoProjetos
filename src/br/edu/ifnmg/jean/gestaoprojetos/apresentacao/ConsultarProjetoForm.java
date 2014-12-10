@@ -8,6 +8,7 @@ package br.edu.ifnmg.jean.gestaoprojetos.apresentacao;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Projeto;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.excecoes.ProjetoInvalidoException;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DepartamentoBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.ProjetoBO;
 import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.configuraLog;
@@ -434,9 +435,9 @@ public class ConsultarProjetoForm extends javax.swing.JFrame {
         Date dataInicio = null, dataTermino = null;
         ProjetoBO projetoBO = new ProjetoBO();
 
-        String valida = projetoBO.validaDados(nome, descricao, dataFValida, dataFValida);
+        projetoBO.validaDados(nome, descricao, dataFValida, dataFValida);
 
-        if (valida == null) {
+        try{
             //Selecionar objeto de departamento
             Departamento departamento = new Departamento();
             try {
@@ -469,8 +470,8 @@ public class ConsultarProjetoForm extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 logger.error("Erro ao atualizar projeto " + ex.getMessage());
             }
-        } else {
-            JOptionPane.showMessageDialog(null, valida, "Consultar Projeto ", JOptionPane.INFORMATION_MESSAGE);
+        } catch(ProjetoInvalidoException ex) {
+            JOptionPane.showMessageDialog(null, "Já existe um projeto cadastrado neste departamento com o mesmo nome!\\n Por favor escolha outro nome.", "Consultar Projeto ", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnAlterarActionPerformed
 
