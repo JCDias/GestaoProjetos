@@ -6,6 +6,8 @@
 package br.edu.ifnmg.jean.gestaoprojetos.dados;
 
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Projeto;
+import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
+import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.RelatorioProjeto;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -286,7 +288,6 @@ public class ProjetoDAO {
             if (conexao != null) {
                 conexao.rollback();
             }
-            throw new RuntimeException(e);
 
         } finally {
             if (comando != null && !comando.isClosed()) {
@@ -337,5 +338,90 @@ public class ProjetoDAO {
             }
         }
         return id_projeto;
+    }
+    
+    //Selecionar projetos
+    
+    private static final String SQL_SELECT_RELATORIO_PROJETO_DIRETOR = ""
+            + "SELECT ID_PROJETO, NOME, DEPARTAMENTOS.NOME,USUARIO.NOME, DATA_INICIO,DATA_TERMINIO,"
+            + "(SELECT COUNT(ID_ATIVIDADE) FROM ATIVIDADE WHERE ATIVIDADE.ID_PROJETO = PROJETO.ID_PROJETO) AS QTD_ATIVIDADE_PROJETO,"
+            + "(SELECT  COUNT (ID_ATIVIDADE) FROM ATIVIDADE WHERE CONCLUSAO = '100' and ATIVIDADE.ID_PROJETO = PROJETO.ID_PROJETO) AS QTD_ATIVIADE_CONCLUIDA "
+            + "FROM PROJETO "
+            + "JOIN DEPARTAMENTOS ON(DEPARTAMENTOS.ID_DEPARTAMENTO = PROJETO.ID_DEPARTAMENTO)"
+            + "JOIN USUARIO ON (USUARIO.ID_DEPARTAMENTO = DEPARTAMENTOS.ID_DEPARTAMENTO)"
+            + "WHERE USUARIO.CARGO = 'Diretor'";
+
+    private static final String SQL_SELECT_RELATORIO_PROJETO_GERENTE = "SELECT ID_PROJETO, NOME, DEPARTAMENTOS.NOME,USUARIO.NOME, DATA_INICIO,DATA_TERMINIO,"
+            + "(SELECT COUNT(ID_ATIVIDADE) FROM ATIVIDADE WHERE ATIVIDADE.ID_PROJETO = PROJETO.ID_PROJETO) AS QTD_ATIVIDADE_PROJETO,"
+            + "(SELECT  COUNT (ID_ATIVIDADE) FROM ATIVIDADE WHERE CONCLUSAO = '100' and ATIVIDADE.ID_PROJETO = PROJETO.ID_PROJETO) AS QTD_ATIVIADE_CONCLUIDA"
+            + "FROM PROJETO "
+            + "JOIN DEPARTAMENTOS ON(DEPARTAMENTOS.ID_DEPARTAMENTO = PROJETO.ID_DEPARTAMENTO)"
+            + "JOIN USUARIO ON (USUARIO.ID_DEPARTAMENTO = DEPARTAMENTOS.ID_DEPARTAMENTO)"
+            + "WHERE USUARIO.CARGO = 'Gerente' AND USUARIO.ID_DEPARTAMENTO = ?";
+    
+    public ArrayList<RelatorioProjeto> listaProjeto(Usuario usuario) throws SQLException {
+        ArrayList<RelatorioProjeto> listaTodosProjeto = new ArrayList<>();
+        RelatorioProjeto relatorioProjetos = null;
+
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+            if (usuario.getCargo().equals("Diretor")) {
+                
+                comando = conexao.prepareStatement(SQL_SELECT_RELATORIO_PROJETO_DIRETOR);
+            } else if (usuario.getCargo().equals("Gerente")) {
+                
+                int id = selecionarIdDepartamento(usuario.getDepartamento().getCodigo());
+                comando = conexao.prepareStatement(SQL_SELECT_RELATORIO_PROJETO_GERENTE);
+                comando.setInt(1, id);
+               
+            }
+
+            resultado = comando.executeQuery();
+            listaTodosProjeto.removeAll(listaTodosProjeto);
+
+            //percorrendo os registros encontrados  
+            if (resultado.next()) {
+                listaTodosProjeto = new ArrayList<RelatorioProjeto>();
+                do {
+                    //instanciando objeto   
+                    relatorioProjetos = new RelatorioProjeto();
+
+
+                    /*setando atributos de acordo com os seus tipos primitivos*/
+                    relatorioProjetos.setIdProjeto(resultado.getInt("ID_PROJETO"));
+                    relatorioProjetos.setNome(resultado.getString("NOME"));
+                    relatorioProjetos.setNomeDepartamento(resultado.getString("DEPARTAMENTOS.NOME"));
+                    relatorioProjetos.setNomeGerenteDepartamento(resultado.getString("USUARIO.NOME"));
+                    relatorioProjetos.setDataInicioProjeto(resultado.getDate("DATA_INCIO"));
+                    relatorioProjetos.setDataTerminoProjeto(resultado.getDate("DATA_TERMINO"));
+                    relatorioProjetos.setQtdAtividade(resultado.getInt("QTD_ATIVIDADE_PROJETO"));
+                    relatorioProjetos.setQtdAtividadeConcluida(resultado.getInt("QTD_ATIVIADE_CONCLUIDA"));
+
+                    //add a lista de objetos encontrados e setados  
+                    listaTodosProjeto.add(relatorioProjetos);
+                } while (resultado.next());
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return listaTodosProjeto;
     }
 }

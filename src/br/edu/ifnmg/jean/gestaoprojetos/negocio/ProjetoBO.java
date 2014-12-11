@@ -9,10 +9,12 @@ import br.edu.ifnmg.jean.gestaoprojetos.dados.DepartamentoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.dados.ProjetoDAO;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Projeto;
+import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
 import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
 import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DataInvalidaException;
 import br.edu.ifnmg.jean.gestaoprojetos.excecoes.NomeInvalidoException;
 import br.edu.ifnmg.jean.gestaoprojetos.excecoes.ProjetoInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.RelatorioProjeto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -113,6 +115,30 @@ public class ProjetoBO {
         int id_projeto = projetDAO.selectProjetoPorNome(NomeProjeto);
         
         return id_projeto;
+
+    }
+    
+    //Preencher combo box projetos
+    public ArrayList<String> ComboBoxEscolhaProjeto(String codDepartamento) throws SQLException {
+
+        ProjetoDAO projetoDAO = new ProjetoDAO();
+        ArrayList<String> Projeto = new ArrayList<>();
+
+        Projeto = projetoDAO.ComboBoxProjeto(codDepartamento);
+
+        return Projeto;
+
+    }
+    
+    //listar projetos
+    public ArrayList<RelatorioProjeto> listarProjeto(Usuario usuario) throws SQLException {
+
+        ProjetoDAO projetoDAO = new ProjetoDAO();
+        ArrayList<RelatorioProjeto> listaProjeto = new ArrayList<>();
+        
+        listaProjeto = projetoDAO.listaProjeto(usuario);
+
+        return listaProjeto;
 
     }
 }

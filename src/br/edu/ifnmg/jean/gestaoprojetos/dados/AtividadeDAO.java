@@ -6,6 +6,7 @@
 package br.edu.ifnmg.jean.gestaoprojetos.dados;
 
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Atividade;
+import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.RelatorioAtividadeProjeto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -420,5 +421,79 @@ public class AtividadeDAO {
         }
         return atividade;
 
+    }
+    
+    //Selecionar atividades para relatório
+    private static final String SQL_SELECT_RELATORIO_ATIVIDADE_PROJETO = "SELECT ID_ATIVIDADE,NOME, DURACAO,HORAS_TRABALHADAS,CONCLUSAO, USUARIO.NOME, PROJETO.NOME,"
+            + "(SELECT COUNT(ID_ATIVIDADE) FROM ATIVIDADE WHERE ATIVIDADE.ID_PROJETO = PROJETO.ID_PROJETO ) AS QTD_ATIVIDADE_PROJETO, "
+            + "(SELECT COUNT(ID_ATIVIDADE) FROM ATIVIDADE WHERE PROJETO.ID_PROJETO = ATIVIDADE.ID_PROJETO AND CONCLUSAO = '100') AS QTD_ATIVIDADE_CONCLUIDA, "
+            + "(SELECT COUNT(ID_ATIVIDADE) FROM ATIVIDADE WHERE PROJETO.ID_PROJETO = ATIVIDADE.ID_PROJETO AND HORAS_TRABALHADAS > '0'AND CONCLUSAO < '100') AS QTD_ATIVIDADE_INICIADA, "
+            + "(SELECT COUNT(ID_ATIVIDADE) FROM ATIVIDADE WHERE PROJETO.ID_PROJETO = ATIVIDADE.ID_PROJETO AND CONCLUSAO IS NULL) AS QTD_ATIVIDADE_NAO_CONCLUIDA "
+            + "FROM ATIVIDADE "
+            + "JOIN PROJETO ON (PROJETO.ID_PROJETO =  ATIVIDADE.ID_PROJETO)"
+            + "JOIN DEPARTAMENTOS ON (DEPARTAMENTOS.ID_DEPARTAMENTO =  PROJETO.ID_DEPARTAMENTO)"
+            + "JOIN USUARIO ON (ATIVIDADE.ID_USUARIO =  USUARIO.ID_USUARIO)"
+            + "WHERE PROJETO.NOME = ?";
+    public ArrayList<RelatorioAtividadeProjeto> SelecionarAtividade(String nomeProjeto) throws SQLException {
+        ArrayList<RelatorioAtividadeProjeto> listaTodasAtividadeProjeto = new ArrayList<>();
+        RelatorioAtividadeProjeto relatorioAtividadeProjeto = null;
+
+        Connection conexao = null;
+        PreparedStatement comando = null;
+        ResultSet resultado = null;
+
+        try {
+
+            conexao = BancoDadosUtil.getConnection();
+
+            comando = conexao.prepareStatement(SQL_SELECT_RELATORIO_ATIVIDADE_PROJETO);
+            comando.setString(1, nomeProjeto);
+
+            resultado = comando.executeQuery();
+            listaTodasAtividadeProjeto.removeAll(listaTodasAtividadeProjeto);
+
+            //percorrendo os registros encontrados  
+            if (resultado.next()) {
+                listaTodasAtividadeProjeto = new ArrayList<RelatorioAtividadeProjeto>();
+                do {
+                    //instanciando objeto   
+                    relatorioAtividadeProjeto = new RelatorioAtividadeProjeto();
+
+
+                    /*setando atributos de acordo com os seus tipos primitivos*/
+                    relatorioAtividadeProjeto.setIdAtividade(resultado.getInt("ID_ATIVIDADE"));
+                    relatorioAtividadeProjeto.setNome(resultado.getString("NOME"));
+                    relatorioAtividadeProjeto.setDuracao(resultado.getFloat("DURACAO"));
+                    relatorioAtividadeProjeto.setConclusao(resultado.getFloat("CONCLUSAO"));
+                    relatorioAtividadeProjeto.setHorasTrabalhadas(resultado.getFloat("HORAS_TRABALHADAS"));
+                    relatorioAtividadeProjeto.setEncarregado(resultado.getString("USUARIO.NOME"));
+                    relatorioAtividadeProjeto.setProjeto(resultado.getString("PROJETO.NOME"));
+                    relatorioAtividadeProjeto.setTotalAtividades(resultado.getInt("QTD_ATIVIDADE_PROJETO"));
+                    relatorioAtividadeProjeto.setAtividadesConcluidas(resultado.getInt("QTD_ATIVIDADE_CONCLUIDA"));
+                    relatorioAtividadeProjeto.setAtividadesNaoIniciadas(resultado.getInt("QTD_ATIVIDADE_NAO_CONCLUIDA"));
+                    relatorioAtividadeProjeto.setAtividadesIniciadas(resultado.getInt("QTD_ATIVIDADE_INICIADA"));
+
+                    //add a lista de objetos encontrados e setados  
+                    listaTodasAtividadeProjeto.add(relatorioAtividadeProjeto);
+                } while (resultado.next());
+            }
+
+            conexao.commit();
+
+        } catch (Exception e) {
+            if (conexao != null) {
+                conexao.rollback();
+            }
+            throw new RuntimeException(e);
+
+        } finally {
+            if (comando != null && !comando.isClosed()) {
+                comando.close();
+            }
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        }
+        return listaTodasAtividadeProjeto;
     }
 }

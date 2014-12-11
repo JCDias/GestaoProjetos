@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c5ce3327-428a-4db6-ad3a-b2e25d2b5771">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="nomeDepartamento" class="java.lang.String"/>
+	<field name="nomeGerenteDepartamento" class="java.lang.String"/>
+	<field name="dataInicioProjeto" class="java.lang.String"/>
+	<field name="dataTerminioProjeto" class="java.lang.String"/>
+	<field name="qtdAtividade" class="java.lang.String"/>
+	<field name="qtdAtividadeConcluida" class="java.lang.String"/>
+	<field name="percentualConclusao" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="74">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="54cd8f27-6cba-4341-95e2-9ebf897e4242"/>
+				<staticText>
+					<reportElement x="20" y="25" width="555" height="43" forecolor="#FFFFFF" uuid="e1769ee8-9707-4333-875f-e3639a1bf596"/>
+					<textElement textAlignment="Center">
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Relatório Projeto]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="24">
+			<line>
+				<reportElement x="-20" y="0" width="595" height="1" forecolor="#666666" uuid="c738eb38-0010-4342-8e1f-43acd9bfce71"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="1" width="82" height="20" uuid="5238bfaa-3209-4348-a293-1fbc282e4e79"/>
+				<text><![CDATA[Nome]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="0" width="81" height="20" uuid="80b15e71-f4cd-41be-ad89-e0ad1de070b1"/>
+				<text><![CDATA[Departamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="163" y="0" width="66" height="20" uuid="38639498-438f-43a1-a347-ba30aa8252b1"/>
+				<text><![CDATA[Gerente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="0" width="43" height="20" uuid="7ee0547d-8af7-4580-b252-399913bed478"/>
+				<text><![CDATA[Início]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="272" y="0" width="45" height="20" uuid="921aa789-ac13-41d6-9b84-1df594a91ffa"/>
+				<text><![CDATA[Términio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="315" y="0" width="82" height="20" uuid="3d76a16c-4a7a-4600-96ae-e76250e52b4c"/>
+				<text><![CDATA[Total Atividades]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="0" width="105" height="20" uuid="a9870d65-5be3-48c3-9209-19d3663aa460"/>
+				<text><![CDATA[Atividades Concluidas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="503" y="0" width="52" height="20" uuid="45e85c6d-5959-46fc-a223-aaa016a9b294"/>
+				<text><![CDATA[Conclusão]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="43">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="0" width="555" height="1" uuid="8fca8fc6-666c-4863-89ed-095daf5ab6e8"/>
+			</line>
+			<textField>
+				<reportElement x="82" y="0" width="81" height="20" uuid="0bdd12c2-bebf-4891-a913-3b5552f6718f"/>
+				<textFieldExpression><![CDATA[$F{nomeDepartamento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="163" y="0" width="66" height="20" uuid="d2ee736c-72f1-458b-9665-88259b232f60"/>
+				<textFieldExpression><![CDATA[$F{nomeGerenteDepartamento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="1" width="82" height="20" uuid="64edaef6-1ce9-4547-8050-61e5316ceb41"/>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="272" y="0" width="45" height="20" uuid="fb875abc-320b-4153-9207-c9d98d4016ad"/>
+				<textFieldExpression><![CDATA[$F{dataTerminioProjeto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="229" y="1" width="43" height="20" uuid="c9b70134-b962-4990-9f59-255c69b210f4"/>
+				<textFieldExpression><![CDATA[$F{dataInicioProjeto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="316" y="1" width="81" height="20" uuid="a25050ce-7d34-45c7-90a5-19ab3cfc4adb"/>
+				<textFieldExpression><![CDATA[$F{qtdAtividade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="398" y="1" width="105" height="20" uuid="018d55cd-d43b-4013-b623-8550715615aa"/>
+				<textFieldExpression><![CDATA[$F{qtdAtividadeConcluida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="503" y="1" width="52" height="20" uuid="dd1d888e-8040-4e75-a057-1e160cf7b6b1"/>
+				<textFieldExpression><![CDATA[$F{percentualConclusao}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="03551fae-ff6d-4247-a9b5-8358b8f0d5b1"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="93bb488d-6e72-4782-90db-49d12b0ffdaf"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEE, d MMM yyyy HH:mm:ss">
+				<reportElement x="0" y="4" width="203" height="13" uuid="c6e7bb37-7855-4bb9-aefb-e549e77adea6"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

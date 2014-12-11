@@ -9,6 +9,7 @@ import br.edu.ifnmg.jean.gestaoprojetos.entidades.Departamento;
 import br.edu.ifnmg.jean.gestaoprojetos.entidades.Usuario;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.AtividadeBO;
 import br.edu.ifnmg.jean.gestaoprojetos.negocio.DepartamentoBO;
+import br.edu.ifnmg.jean.gestaoprojetos.negocio.ProjetoBO;
 import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.configuraLog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +22,11 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
 
 /**
@@ -81,6 +87,8 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         mnuAtividadesAtraso = new javax.swing.JMenuItem();
         mnuLancarHora = new javax.swing.JMenuItem();
         mnuRelatorios = new javax.swing.JMenu();
+        mnuRelatorioAtividadeProjeto = new javax.swing.JMenuItem();
+        mnuRelatorioProjeto = new javax.swing.JMenuItem();
         mnuOpcoes = new javax.swing.JMenu();
         mnuEditarPerfil = new javax.swing.JMenuItem();
         mnuSair = new javax.swing.JMenu();
@@ -258,6 +266,27 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
 
         mnuRelatorios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/Volume Manager.png"))); // NOI18N
         mnuRelatorios.setText("Relatórios    ");
+
+        mnuRelatorioAtividadeProjeto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
+        mnuRelatorioAtividadeProjeto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/acroread.png"))); // NOI18N
+        mnuRelatorioAtividadeProjeto.setText("Atividades por Projeto");
+        mnuRelatorioAtividadeProjeto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuRelatorioAtividadeProjetoActionPerformed(evt);
+            }
+        });
+        mnuRelatorios.add(mnuRelatorioAtividadeProjeto);
+
+        mnuRelatorioProjeto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_T, java.awt.event.InputEvent.CTRL_MASK));
+        mnuRelatorioProjeto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/PNG/acroread.png"))); // NOI18N
+        mnuRelatorioProjeto.setText("Projetos");
+        mnuRelatorioProjeto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuRelatorioProjetoActionPerformed(evt);
+            }
+        });
+        mnuRelatorios.add(mnuRelatorioProjeto);
+
         jMenuBar1.add(mnuRelatorios);
 
         mnuOpcoes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/edu/ifnmg/jean/gestaoprojetos/icones/configure.png"))); // NOI18N
@@ -374,7 +403,37 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
         consAA.setVisible(true);;
     }//GEN-LAST:event_mnuAtividadesAtrasoActionPerformed
 
-    public void cadastrarUsuario(String tipo) {
+    private void mnuRelatorioAtividadeProjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuRelatorioAtividadeProjetoActionPerformed
+        GerarRelatorioAtividadeProjeto gap = new GerarRelatorioAtividadeProjeto(userLogado);
+        gap.setVisible(true);
+    }//GEN-LAST:event_mnuRelatorioAtividadeProjetoActionPerformed
+
+    private void mnuRelatorioProjetoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuRelatorioProjetoActionPerformed
+        ProjetoBO projetoBO = new ProjetoBO();
+
+        //chamar o relatorio
+        try {
+            String relatorio = System.getProperty("user.dir") + "/relatorios/RelatorioProjeto.jasper";
+
+            //criar fonte de dados
+            JRBeanCollectionDataSource fonteDados = new JRBeanCollectionDataSource(projetoBO.listarProjeto(userLogado));
+
+            //gerar relatorio
+            JasperPrint relatorioGerado = JasperFillManager.fillReport(relatorio, null, fonteDados);
+
+            //exibir o relatorio na tela
+            JasperViewer jasperViewer = new JasperViewer(relatorioGerado, false);
+            jasperViewer.setVisible(true);
+
+        } catch (JRException ex) {
+            logger.error("Falha ao gerar Relatorio: " + ex.getMessage());
+        } catch (SQLException ex) {
+            logger.error(ex.getMessage());
+        }
+
+    }//GEN-LAST:event_mnuRelatorioProjetoActionPerformed
+
+public void cadastrarUsuario(String tipo) {
         Departamento departamentoexiste = new Departamento();
 
         DepartamentoBO departamentoBO = new DepartamentoBO();
@@ -401,25 +460,30 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
 
         Timer timer = new Timer(1000, new hora());
         timer.start();
-    }
+    
+
+
+
+}
 
     class hora implements ActionListener {
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Calendar now = Calendar.getInstance();
-            hora.setText(String.format("%1$tH:%1$tM:%1$tS", now));
-        }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Calendar now = Calendar.getInstance();
+        hora.setText(String.format("%1$tH:%1$tM:%1$tS", now));
     }
+}
 
-    //FUnção para ocultar itens da tela de acordo com o tipo de usuário cadastrado
-    public void tipoUsuario() {
+//FUnção para ocultar itens da tela de acordo com o tipo de usuário cadastrado
+public void tipoUsuario() {
         String cargo = this.userLogado.getCargo();
 
         if (cargo.equals("Diretor")) {
             this.mnuLancarHora.setVisible(false);
             this.mnuAtividadesAtraso.setVisible(false);
             this.mnuProjetoAtividade.setVisible(false);
+            this.mnuRelatorioAtividadeProjeto.setVisible(false);
         } else if (cargo.equals("Gerente")) {
             this.mnuCadGerente.setVisible(false);
             this.mnuCadDepartamento.setVisible(false);
@@ -459,6 +523,8 @@ public class TelaPrincipalForm extends javax.swing.JFrame {
     private javax.swing.JMenu mnuProjeto;
     private javax.swing.JMenuItem mnuProjetoAtividade;
     private javax.swing.JMenuItem mnuProjetoProjeto;
+    private javax.swing.JMenuItem mnuRelatorioAtividadeProjeto;
+    private javax.swing.JMenuItem mnuRelatorioProjeto;
     private javax.swing.JMenu mnuRelatorios;
     private javax.swing.JMenu mnuSair;
     private javax.swing.JLabel txtUsuario;

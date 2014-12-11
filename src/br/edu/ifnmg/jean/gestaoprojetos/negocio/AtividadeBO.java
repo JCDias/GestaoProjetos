@@ -14,6 +14,7 @@ import br.edu.ifnmg.jean.gestaoprojetos.excecoes.AtividadeExistenteException;
 import br.edu.ifnmg.jean.gestaoprojetos.excecoes.CamposVaziosException;
 import br.edu.ifnmg.jean.gestaoprojetos.excecoes.DadoInvalidoException;
 import br.edu.ifnmg.jean.gestaoprojetos.excecoes.NomeInvalidoException;
+import br.edu.ifnmg.jean.gestaoprojetos.utilitarios.RelatorioAtividadeProjeto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -162,5 +163,18 @@ public class AtividadeBO {
         atividade = atividadeDAO.HorasConclusao(departamento);
         
         return atividade;
+    }
+    
+    
+    //Listar atividades
+    public ArrayList<RelatorioAtividadeProjeto> listaAtividade(String nomeProjeto) throws SQLException {
+
+        AtividadeDAO atividadeDAO = new AtividadeDAO();
+        ArrayList<RelatorioAtividadeProjeto> listaAtividade = new ArrayList<>();
+
+        listaAtividade = atividadeDAO.SelecionarAtividade(nomeProjeto);
+
+        return listaAtividade;
+
     }
 }
